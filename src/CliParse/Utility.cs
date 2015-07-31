@@ -3,11 +3,16 @@ using System.Runtime.InteropServices;
 
 namespace CliParse
 {
-    public class Utility
+    public static class Utility
     {
         [DllImport("shell32.dll", SetLastError = true)]
         static extern IntPtr CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);
 
+        /// <summary>
+        /// Uses the standard windows 
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <returns></returns>
         public static string[] CommandLineToArgs(string commandLine)
         {
             int argc;

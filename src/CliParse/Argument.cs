@@ -4,22 +4,22 @@ namespace CliParse
 {
     public class Argument : Attribute
     {
-        public string ArgumentName { get; set; }
-        public string ArgumentShortName { get; set; }
-        public string DefaultValue { get; set; }
+        public string Name { get; private set; }
+        public char ShortName { get; private set; }
+        public object DefaultValue { get; set; }
         public string Description { get; set; }
         public string Example { get; set; }
         public bool Required { get; set; }
 
-        public Argument(string argumentName)
+        public Argument(char shortName)
         {
-            ArgumentName = argumentName;
+            ShortName = shortName;
         }
 
-        public Argument(string argumentName, string shortName)
+        public Argument(char shortName, string name)
         {
-            ArgumentName = argumentName;
-            ArgumentShortName = shortName;
+            Name = name;
+            ShortName = shortName;
         }
     }
 }
