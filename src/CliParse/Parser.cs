@@ -30,14 +30,14 @@ namespace CliParse
         private static void MapArguments(Parsable parsable, string[] args)
         {
             var tokens = Tokenizer.Tokenize(args).ToList();
+            var discoveredArguments = new List<ParsableArgument>();
 
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
             
-            var discoveredArguments = new List<Argument>();
             foreach (var prop in properties)
             {
-                foreach (var argument in prop.GetCustomAttributes(true).OfType<Argument>())
+                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgument>())
                 {
                     discoveredArguments.Add(argument);
                     SetPropertyValue(parsable, tokens, argument, prop);
@@ -47,21 +47,21 @@ namespace CliParse
             // missing required fields
             foreach (var argument in discoveredArguments.Where(argument => argument.Required).Where(argument => tokens.FirstOrDefault(x=> x.Type == TokenType.Field && (x.Value.Equals(argument.Name) || x.Value.Equals(argument.Name)))== null))
             {
-                throw new CliParseException(string.Format("Required argument '{0}' was not supplied.",argument.ShortName));
+                throw new CliParseException(string.Format("Required ParsableArgument '{0}' was not supplied.",argument.ShortName));
             }
 
             // unknown aruments
             foreach (var token in tokens.Where(token => token.Type == TokenType.Field).Where(token => !discoveredArguments.Any(x => ((x.Name != null && x.Name.Equals(token.Value)) || (x.ShortName.ToString().Equals(token.Value))))))
             {
-                throw new CliParseException(string.Format("Unknown argument '{0}' was supplied.", token.Value));
+                throw new CliParseException(string.Format("Unknown ParsableArgument '{0}' was supplied.", token.Value));
             }
         }
 
-        private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens, Argument argument, PropertyInfo prop)
+        private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens, ParsableArgument parsableArgument, PropertyInfo prop)
         {
             // shortnames are unique and required so use as key in dict.
-            var shortName = argument.ShortName.ToString();
-            var longName = argument.Name;
+            var shortName = parsableArgument.ShortName.ToString();
+            var longName = parsableArgument.Name;
             
             var token = tokens.FirstOrDefault(x => x.Value.Equals(shortName) || x.Value.Equals(longName));
             if (token != null && token.Type == TokenType.Field)
@@ -73,7 +73,7 @@ namespace CliParse
                 else
                 {
                     var tokenValue = tokens.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
-                    if(tokenValue == null) throw new CliParseException(string.Format("Missing value for argument {0}", token.Value));
+                    if(tokenValue == null) throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
 
                     prop.SetValue(parsable, Convert.ChangeType(tokenValue.Value, prop.PropertyType));
                     

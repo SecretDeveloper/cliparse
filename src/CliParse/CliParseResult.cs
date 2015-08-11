@@ -16,7 +16,7 @@ namespace CliParse
         public void AddMessageFromException(CliParseException exception)
         {
             Successful = false;
-            CliParseMessages.Add(string.Format("Exception of type '{0}' thrown.  - {1}",exception.GetType().ToString(), exception.Message));
+            CliParseMessages.Add(string.Format("Exception of type '{0}' thrown.  - {1}",exception.GetType(), exception.Message));
         }
     }
 }

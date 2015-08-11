@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ParsableObjects\RequiredCli.cs" />
     <Compile Include="ParsableObjects\SimpleCli.cs" />
     <Compile Include="ParsableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -39,11 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Argument.cs" />
+    <Compile Include="ParsableArgument.cs" />
     <Compile Include="CliParseException.cs" />
     <Compile Include="CliParseResult.cs" />
     <Compile Include="InfoBuilder.cs" />
     <Compile Include="Parsable.cs" />
+    <Compile Include="ParsableClass.cs" />
     <Compile Include="ParsableExtensions.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

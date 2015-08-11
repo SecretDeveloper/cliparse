@@ -2,14 +2,13 @@
 {
     public abstract class Parsable
     {
-        public const string DefaultTemplate = @"{title}
+        public const string DefaultTemplate = @"{title} {version}
+Copyright (C) {copyright}
 Description:
     {description}    
 Syntax:
-    {syntax}
-Company - {company}
-Copyright - {copyright}";
-            
-        
+{syntax}
+{footer}
+";
     }
 }

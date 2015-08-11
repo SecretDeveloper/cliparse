@@ -8,7 +8,7 @@ namespace CliParse
 {
     public static class InfoBuilder
     {
-        public static string GetHelpInfoFromAssemblyInfo(Parsable parsable, Assembly asm, string template, string argumentTemplate, string argumentPrefix)
+        public static string GetHelpInfoFromAssembly(Parsable parsable, Assembly asm, string template, string argumentTemplate, string argumentPrefix)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
             if(asm == null) throw new ArgumentNullException("asm");
@@ -24,15 +24,47 @@ namespace CliParse
 
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
             template = template.Replace("{syntax}", syntax);
-
-            var company = GetAssemblyAttribute(asm, typeof (AssemblyCompanyAttribute));
-            template = template.Replace("{company}", company);
-
+            
             var copyright = GetAssemblyAttribute(asm, typeof (AssemblyCopyrightAttribute));
             template = template.Replace("{copyright}", copyright);
 
+            var version = asm.GetName().Version.ToString();
+            template = template.Replace("{version}", version);
+
+            var footer = GetAssemblyMetadataAttribute(asm, "footer");
+            template = template.Replace("{footer}", footer);
+
             return template;
         }
+
+        public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, string argumentPrefix)
+        {
+            if (parsable == null) throw new ArgumentNullException("parsable");
+
+            var parsableClass = GetObjectAttribute(parsable, typeof(ParsableClass)) as ParsableClass;
+            if(parsableClass == null)
+                throw new CliParseException("Unable to find [ParsableClass] attribute on provided object.");
+
+            template = template.Replace("{title}", parsableClass.Title);
+            template = template.Replace("{description}", parsableClass.Description);
+            template = template.Replace("{copyright}", parsableClass.Copyright);
+            template = template.Replace("{version}", parsableClass.Version);
+
+            var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
+            template = template.Replace("{syntax}", syntax);
+
+            template = template.Replace("{example}", parsableClass.ExampleText);
+            template = template.Replace("{footer}", parsableClass.FooterText);
+
+            return template;
+        }
+
+        private static object GetObjectAttribute(Parsable parsable, Type type)
+        {
+            var parsableType = parsable.GetType();
+            return parsableType.GetCustomAttributes(true).FirstOrDefault(x => x.GetType() == type);
+        }
+
 
         private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
         {
@@ -47,17 +79,17 @@ namespace CliParse
             return sb.ToString();
         }
 
-        private static IEnumerable<Argument> GetListArgumentAttributes(Parsable parsable)
+        private static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
 
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
 
-            var arguments = new List<Argument>();
+            var arguments = new List<ParsableArgument>();
             foreach (var prop in properties)
             {
-                foreach (var argument in prop.GetCustomAttributes(true).OfType<Argument>())
+                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgument>())
                 {
                     arguments.Add(argument);
                 }

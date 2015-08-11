@@ -10,7 +10,7 @@ namespace CliParse.Test
         [TestMethod]
         public void can_parse_single_arguments_by_long_name()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/Field2 testname");
+            var args = Utility.CommandLineToArgs("/Field2 testname");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
@@ -23,7 +23,7 @@ namespace CliParse.Test
         [TestMethod]
         public void can_parse_single_arguments_by_short_name()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/a testname");
+            var args = Utility.CommandLineToArgs("/a testname");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
@@ -36,7 +36,7 @@ namespace CliParse.Test
         [TestMethod]
         public void can_handle_flags()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/e");
+            var args = Utility.CommandLineToArgs("/e");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
@@ -47,7 +47,7 @@ namespace CliParse.Test
         [TestMethod]
         public void can_parse_int_arguments_by_short_name()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/f 1");
+            var args = Utility.CommandLineToArgs("/f 1");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
@@ -61,7 +61,7 @@ namespace CliParse.Test
         [ExpectedException(typeof(CliParseException))]
         public void enforces_required_fields()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/e");
+            var args = Utility.CommandLineToArgs("/e");
             var cli = new RequiredCli();
             var result = cli.CliParse(args);
             Assert.AreEqual(false, result.Successful);
@@ -72,7 +72,7 @@ namespace CliParse.Test
         [ExpectedException(typeof(CliParseException))]
         public void can_handle_unrecognised_arguments()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/unknownflag testflag");
+            var args = Utility.CommandLineToArgs("/unknownflag testflag");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(false, result.Successful);

@@ -2,7 +2,7 @@ using System;
 
 namespace CliParse
 {
-    public class Argument : Attribute
+    public class ParsableArgument : Attribute
     {
         public string Name { get; private set; }
         public char ShortName { get; private set; }
@@ -11,18 +11,17 @@ namespace CliParse
         public string Example { get; set; }
         public bool Required { get; set; }
 
-        public const string DefaultTemplate = @"    {shortname} {name} {description}
-        required:{required} default:{defaultvalue}
+        public const string DefaultPrefix = "-";
+        public const string DefaultTemplate = @"    {shortname} {name}    {description}
+        required:{required} default:'{defaultvalue}'
         {example}";
 
-        public const string DefaultPrefix = "-";
-
-        public Argument(char shortName)
+        public ParsableArgument(char shortName)
         {
             ShortName = shortName;
         }
 
-        public Argument(char shortName, string name)
+        public ParsableArgument(char shortName, string name)
         {
             Name = name;
             ShortName = shortName;

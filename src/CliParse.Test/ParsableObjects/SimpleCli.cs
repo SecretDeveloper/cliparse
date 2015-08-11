@@ -1,24 +1,12 @@
 ﻿namespace CliParse.Test.ParsableObjects
 {
-    public class RequiredCli : Parsable
-    {
-        /// <summary>
-        /// 'd' RequiredField
-        /// </summary>
-        [Argument('d', "RequiredField", Required = true)]
-        public string RequiredField
-        {
-            get;
-            set;
-        }
-    }
-
+    [ParsableClass("Simple CLI Test Class", "This is a description.")]
     public class SimpleCli:Parsable
     {
         /// <summary>
         /// 'a'
         /// </summary>
-        [Argument('a')]
+        [ParsableArgument('a')]
         public string Field1
         {
             get;
@@ -28,7 +16,7 @@
         /// <summary>
         /// 'b' Field2
         /// </summary>
-        [Argument('b', "Field2")]
+        [ParsableArgument('b', "Field2", Example = "-b 'this is an example usage'")]
         public string Field2
         {
             get;
@@ -38,7 +26,7 @@
         /// <summary>
         /// 'c' DefaultedField, defaultValue
         /// </summary>
-        [Argument('c', "DefaultedField", DefaultValue = "defaultValue")]
+        [ParsableArgument('c', "DefaultedField", DefaultValue = "defaultValue")]
         public string DefaultedField
         {
             get;
@@ -48,7 +36,7 @@
         /// <summary>
         /// 'e' Flag1
         /// </summary>
-        [Argument('e', "Flag1")]
+        [ParsableArgument('e', "Flag1")]
         public bool Flag1
         {
             get;
@@ -58,7 +46,7 @@
         /// <summary>
         /// 'f' Flag3
         /// </summary>
-        [Argument('f', "Field3")]
+        [ParsableArgument('f', "Field3", DefaultValue = 22)]
         public int Field3
         {
             get;
@@ -68,7 +56,7 @@
         /// <summary>
         /// 'g' Flag4
         /// </summary>
-        [Argument('g', "Field4", Description = "This is a short description")]
+        [ParsableArgument('g', "Field4", Description = "This is a short description")]
         public int Field4
         {
             get;
@@ -78,7 +66,7 @@
         /// <summary>
         /// 'h' Flag5
         /// </summary>
-        [Argument('h', "Field5", Description = "This is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long description")]
+        [ParsableArgument('h', "Field5", Description = "This is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long description")]
         public int Field5
         {
             get;
