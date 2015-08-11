@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("CliParse")]
 [assembly: AssemblyDescription("Commandline parsing library.")]
-[assembly: AssemblyMetadata("cliparse_longdescription", "")]
 [assembly: AssemblyProduct("Library")]
 [assembly: AssemblyCopyright("Gary Kenneally (@SecretDeveloper) [2015]")]
 [assembly: AssemblyTrademark("")]

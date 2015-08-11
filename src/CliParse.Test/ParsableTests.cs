@@ -58,7 +58,6 @@ namespace CliParse.Test
 
         [TestCategory("Parsing")]
         [TestMethod]
-        [ExpectedException(typeof(CliParseException))]
         public void enforces_required_fields()
         {
             var args = Utility.CommandLineToArgs("/e");
@@ -69,7 +68,6 @@ namespace CliParse.Test
 
         [TestCategory("Parsing")]
         [TestMethod]
-        [ExpectedException(typeof(CliParseException))]
         public void can_handle_unrecognised_arguments()
         {
             var args = Utility.CommandLineToArgs("/unknownflag testflag");

@@ -18,10 +18,7 @@ namespace CliParse
 
             var description = GetAssemblyAttribute(asm, typeof (AssemblyDescriptionAttribute));
             template = template.Replace("{description}", description);
-
-            var longdescription = GetAssemblyMetadataAttribute(asm, "longdescription");
-            template = template.Replace("{longdescription}", longdescription);
-
+            
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
             template = template.Replace("{syntax}", syntax);
             
@@ -102,8 +99,7 @@ namespace CliParse
             var customAttributes = asm.GetCustomAttributes(typeof (AssemblyMetadataAttribute));
 
             var t = (from AssemblyMetadataAttribute attribute in customAttributes
-                where attribute.Key.Equals(key)
-                select attribute).FirstOrDefault();
+                     select attribute).FirstOrDefault(x => x.Key.Equals(key));
 
             return t == null ? "" : t.Value;
         }

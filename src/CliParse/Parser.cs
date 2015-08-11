@@ -17,18 +17,19 @@ namespace CliParse
                 if (args == null) throw new CliParseException("Parameter 'args' cannot be null.");
                 if (parsable == null) throw new CliParseException("Parameter 'parsable' cannot be null.");
                 
-                MapArguments(parsable, args);
+                result = MapArguments(parsable, args);
             }
             catch (CliParseException ex) 
             {
                 result.AddMessageFromException(ex);
-                throw ex;
             }
             return result;
         }
 
-        private static void MapArguments(Parsable parsable, string[] args)
+        private static CliParseResult MapArguments(Parsable parsable, string[] args)
         {
+            var result = new CliParseResult();
+
             var tokens = Tokenizer.Tokenize(args).ToList();
             var discoveredArguments = new List<ParsableArgument>();
 
@@ -47,14 +48,16 @@ namespace CliParse
             // missing required fields
             foreach (var argument in discoveredArguments.Where(argument => argument.Required).Where(argument => tokens.FirstOrDefault(x=> x.Type == TokenType.Field && (x.Value.Equals(argument.Name) || x.Value.Equals(argument.Name)))== null))
             {
-                throw new CliParseException(string.Format("Required ParsableArgument '{0}' was not supplied.",argument.ShortName));
+                result.AddErrorMessage(string.Format("Required ParsableArgument '{0}' was not supplied.",argument.ShortName));
             }
 
             // unknown aruments
             foreach (var token in tokens.Where(token => token.Type == TokenType.Field).Where(token => !discoveredArguments.Any(x => ((x.Name != null && x.Name.Equals(token.Value)) || (x.ShortName.ToString().Equals(token.Value))))))
             {
-                throw new CliParseException(string.Format("Unknown ParsableArgument '{0}' was supplied.", token.Value));
+                result.AddErrorMessage(string.Format("Unknown argument '{0}' was supplied.", token.Value));
             }
+
+            return result;
         }
 
         private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens, ParsableArgument parsableArgument, PropertyInfo prop)

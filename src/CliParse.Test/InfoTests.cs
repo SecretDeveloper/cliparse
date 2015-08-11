@@ -4,7 +4,7 @@ using CliParse;
 using CliParse.Test.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace cliparse.test
+namespace CliParse.Test
 {
     [TestClass]
     public class InfoTests

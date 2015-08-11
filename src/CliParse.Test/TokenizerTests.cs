@@ -3,7 +3,7 @@ using System.Linq;
 using CliParse.Tokenize;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace cliparse.test
+namespace CliParse.Test
 {
     [TestClass]
     public class TokenizerTests
