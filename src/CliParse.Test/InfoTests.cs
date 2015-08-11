@@ -43,8 +43,8 @@ Syntax:
         required:N default:
         
 
-Company - Microsoft
-Copyright - Copyright © Microsoft 2015";
+Company - @SecretDeveloper
+Copyright - Gary Kenneally (@SecretDeveloper) [2015]";
             Assert.AreEqual(expected, simple.GetHelpInfoFromAssembly(asm));
         }
     }
