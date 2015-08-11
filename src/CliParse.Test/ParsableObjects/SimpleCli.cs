@@ -56,10 +56,30 @@
         }
 
         /// <summary>
-        /// 'e' Flag1
+        /// 'f' Flag3
         /// </summary>
         [Argument('f', "Field3")]
         public int Field3
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 'g' Flag4
+        /// </summary>
+        [Argument('g', "Field4", Description = "This is a short description")]
+        public int Field4
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 'h' Flag5
+        /// </summary>
+        [Argument('h', "Field5", Description = "This is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long descriptionThis is a long description")]
+        public int Field5
         {
             get;
             set;

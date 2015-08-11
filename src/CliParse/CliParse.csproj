@@ -42,7 +42,10 @@
     <Compile Include="Argument.cs" />
     <Compile Include="CliParseException.cs" />
     <Compile Include="CliParseResult.cs" />
+    <Compile Include="InfoBuilder.cs" />
     <Compile Include="Parsable.cs" />
+    <Compile Include="ParsableExtensions.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenize\Token.cs" />
     <Compile Include="Utility.cs" />

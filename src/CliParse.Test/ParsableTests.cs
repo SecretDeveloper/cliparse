@@ -6,6 +6,7 @@ namespace CliParse.Test
     [TestClass]
     public class ParsableTests
     {
+        [TestCategory("Parsing")]
         [TestMethod]
         public void can_parse_single_arguments_by_long_name()
         {
@@ -18,6 +19,7 @@ namespace CliParse.Test
             Assert.AreEqual("testname", simple.Field2);
         }
 
+        [TestCategory("Parsing")]
         [TestMethod]
         public void can_parse_single_arguments_by_short_name()
         {
@@ -30,7 +32,7 @@ namespace CliParse.Test
             Assert.AreEqual("testname", simple.Field1);
         }
 
-
+        [TestCategory("Parsing")]
         [TestMethod]
         public void can_handle_flags()
         {
@@ -41,6 +43,7 @@ namespace CliParse.Test
             Assert.AreEqual(true, simple.Flag1);
         }
 
+        [TestCategory("Parsing")]
         [TestMethod]
         public void can_parse_int_arguments_by_short_name()
         {
@@ -53,6 +56,7 @@ namespace CliParse.Test
             Assert.AreEqual(1, simple.Field3);
         }
 
+        [TestCategory("Parsing")]
         [TestMethod]
         [ExpectedException(typeof(CliParseException))]
         public void enforces_required_fields()
@@ -63,6 +67,7 @@ namespace CliParse.Test
             Assert.AreEqual(false, result.Successful);
         }
 
+        [TestCategory("Parsing")]
         [TestMethod]
         [ExpectedException(typeof(CliParseException))]
         public void can_handle_unrecognised_arguments()
