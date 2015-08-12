@@ -1,7 +1,7 @@
-﻿using CliParse.Test.ParsableObjects;
+﻿using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CliParse.Test
+namespace CliParse.Tests
 {
     [TestClass]
     public class ParsableTests

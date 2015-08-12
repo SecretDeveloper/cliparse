@@ -1,4 +1,4 @@
-﻿namespace CliParse.Test.ParsableObjects
+﻿namespace CliParse.Tests.ParsableObjects
 {
     public class RequiredCli : Parsable
     {

@@ -1,4 +1,4 @@
-﻿namespace CliParse.Test.ParsableObjects
+﻿namespace CliParse.Tests.ParsableObjects
 {
     [ParsableClass("Simple CLI Test Class", "This is a description.")]
     public class SimpleCli:Parsable

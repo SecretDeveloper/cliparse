@@ -3,7 +3,7 @@ using System.Linq;
 using CliParse.Tokenize;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CliParse.Test
+namespace CliParse.Tests
 {
     [TestClass]
     public class TokenizerTests
@@ -81,6 +81,8 @@ namespace CliParse.Test
             Assert.AreEqual(1, tokens[1].Index);
             Assert.AreEqual("http://google.com?q=asdf-gg", tokens[1].Value);
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
+
+            
         }
     }
 }
