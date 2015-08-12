@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>CliParse</id>
+    <version>$version$</version>
+    <title>CliParse</title>
+    <authors>Gary Kenneally (@SecretDeveloper)</authors>
+    <owners>Gary Kenneally (@SecretDeveloper)</owners>
+    <licenseUrl>https://github.com/SecretDeveloper/cliparse/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/SecretDeveloper/cliparse/</projectUrl>    
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A command line parsing library</description>    
+    <copyright>Copyright 2015</copyright>
+    <tags>CommandLine Parse</tags>
+  </metadata>
+  <files>
+    <file src="..\..\BuildOutput\cliparse.dll" target=""/>
+  </files>
+</package>

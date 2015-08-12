@@ -33,14 +33,19 @@ function clean{
 }
 
 function preBuild{
-
-    # Set assembly VERSION
+   
     write-host "PreBuild"  -foregroundcolor:blue
-
-    (Get-Content $basePath\src\$projectName\Properties\AssemblyInfo.Template.txt) | 
-    Foreach-Object {$_ -replace "//{VERSION}", "[assembly: AssemblyVersion(""$buildVersion"")]"} | 
-    Foreach-Object {$_ -replace "//{FILEVERSION}", "[assembly: AssemblyFileVersion(""$buildVersion"")]"} | 
-    Set-Content $basePath\src\$projectName\Properties\AssemblyInfo.cs
+    Try{
+        # Set assembly VERSION
+        Get-Content $basePath\src\$projectName\Properties\AssemblyInfo.Template.txt  -ErrorAction stop |
+        Foreach-Object {$_ -replace "//{VERSION}", "[assembly: AssemblyVersion(""$buildVersion"")]"} | 
+        Foreach-Object {$_ -replace "//{FILEVERSION}", "[assembly: AssemblyFileVersion(""$buildVersion"")]"} | 
+        Set-Content $basePath\src\$projectName\Properties\AssemblyInfo.cs -ErrorAction stop    
+    }
+    Catch{
+        Write-host "PREBUILD FAILED!" -foregroundcolor:red
+        exit
+    }
 }
 
 function build{
@@ -131,7 +136,7 @@ function test{
 function pack{
     # Packing
     write-host "Packing" -foregroundcolor:blue
-    nuget pack .\src\$projectName\$projectName.csproj -OutputDirectory .\releases > $logPath\LogPacking.log     
+    nuget pack .\src\$projectName\$projectName.nuspec -version $fullBuildVersion -OutputDirectory .\releases > $logPath\LogPacking.log     
     if($? -eq $False){
         Write-host "PACK FAILED!"  -foregroundcolor:red
         exit
@@ -141,7 +146,7 @@ function pack{
 function createZip{
     # DEPLOYING
     write-host "Creating zip" -foregroundcolor:blue
-    $outputName = $projectName+"_V"+$buildVersion+"_BUILD.zip"
+    $outputName = $projectName+"_V"+$fullBuildVersion+"_BUILD.zip"
     zip a -tzip .\releases\$outputName -r .\src\BuildOutput\*.* >> $logPath\LogDeploy.log    
 
 }
@@ -160,7 +165,6 @@ $fullBuildVersion = "$buildVersion.0"
 $projectName = "CliParse"
 
 if($buildType -eq "publish"){
-    
     $buildType="Release"
 
     clean

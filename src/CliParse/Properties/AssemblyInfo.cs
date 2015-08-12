@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Library")]
 [assembly: AssemblyCopyright("Gary Kenneally (@SecretDeveloper) [2015]")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCompany("@SecretDeveloper")]
+[assembly: AssemblyCompany("Gary Kenneally (@SecretDeveloper)")]
 
 [assembly: AssemblyConfiguration("")]
 
@@ -24,5 +24,5 @@ using System.Runtime.InteropServices;
 // The following Assembly Version items are managed by the build process.
 //[assembly: AssemblyVersion("0.0.0.0")]
 //[assembly: AssemblyFileVersion("0.0.0.0")]
-[assembly: AssemblyVersion("0.1.1")]
-[assembly: AssemblyFileVersion("0.1.1")]
+[assembly: AssemblyVersion("0.1.2")]
+[assembly: AssemblyFileVersion("0.1.2")]
