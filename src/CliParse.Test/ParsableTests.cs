@@ -48,6 +48,21 @@ namespace CliParse.Tests
 
         [TestCategory("Parsing")]
         [TestMethod]
+        public void can_default_values()
+        {
+            var args = Utility.CommandLineToArgs("/e");
+            var simple = new SimpleCli();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual(true, simple.Flag1);
+
+            Assert.AreEqual("defaultValue", simple.DefaultedField);
+            Assert.AreEqual(22, simple.Field3);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
         public void can_parse_int_arguments_by_short_name()
         {
             var args = Utility.CommandLineToArgs("/f 1");

@@ -114,6 +114,10 @@ namespace CliParse
                     
                 }
             }
+            else if (parsableArgument.DefaultValue != null)
+            {
+                prop.SetValue(parsable, parsableArgument.DefaultValue);
+            }
         }
 
         private static string CleanName(string argumentName)
