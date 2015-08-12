@@ -1,0 +1,22 @@
+using System.Reflection;
+
+namespace CliParse
+{
+    public static class ParsableExtensions
+    {
+        public static CliParseResult CliParse(this Parsable parsable, string[] args)
+        {
+            return Parser.Parse(parsable, args);
+        }
+
+        public static string GetHelpInfo(this Parsable parsable, string template = Parsable.DefaultTemplate, string argumentTemplate = ParsableArgument.DefaultTemplate, string argumentPrefix = ParsableArgument.DefaultPrefix)
+        {
+            return InfoBuilder.GetHelpInfo(parsable, template, argumentTemplate, argumentPrefix);
+        }
+
+        public static string GetHelpInfoFromAssembly(this Parsable parsable, Assembly asm, string template = Parsable.DefaultTemplate, string argumentTemplate=ParsableArgument.DefaultTemplate, string argumentPrefix=ParsableArgument.DefaultPrefix)
+        {
+            return InfoBuilder.GetHelpInfoFromAssembly(parsable, asm, template, argumentTemplate, argumentPrefix);
+        }
+    }
+}

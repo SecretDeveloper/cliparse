@@ -1,17 +1,18 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("cliparse.test")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This assembly contains the unit tests for the cliparse library.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("cliparse.test")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
+[assembly: AssemblyProduct("Library")]
+[assembly: AssemblyCopyright("Gary Kenneally (@SecretDeveloper) [2015]")]
 [assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("@SecretDeveloper")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,5 +33,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.15.0.0")]
+[assembly: AssemblyFileVersion("0.13.0.0")]

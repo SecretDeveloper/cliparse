@@ -3,11 +3,12 @@ using System.Linq;
 using CliParse.Tokenize;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace cliparse.test
+namespace CliParse.Tests
 {
     [TestClass]
     public class TokenizerTests
     {
+        [TestCategory("Tokenizer")]
         [TestMethod]
         public void Can_Parse_Flags()
         {
@@ -28,6 +29,7 @@ namespace cliparse.test
             Assert.AreEqual(tokens.FirstOrDefault().Type, TokenType.Field);
         }
 
+        [TestCategory("Tokenizer")]
         [TestMethod]
         public void Can_Parse_FieldValues()
         {
@@ -45,6 +47,7 @@ namespace cliparse.test
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
         }
 
+        [TestCategory("Tokenizer")]
         [TestMethod]
         public void Can_Handle_Quoted_Values()
         {
@@ -62,6 +65,7 @@ namespace cliparse.test
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
         }
 
+        [TestCategory("Tokenizer")]
         [TestMethod]
         public void Can_Handle_URLs()
         {
@@ -77,6 +81,8 @@ namespace cliparse.test
             Assert.AreEqual(1, tokens[1].Index);
             Assert.AreEqual("http://google.com?q=asdf-gg", tokens[1].Value);
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
+
+            
         }
     }
 }

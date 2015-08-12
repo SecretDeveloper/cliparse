@@ -5,7 +5,12 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliParse", "cliparse\CliParse.csproj", "{3EE31DEB-3E02-4527-99E8-2467A5B5C67E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliParse.Test", "cliparse.test\CliParse.Test.csproj", "{8DD6B384-2A15-4EA5-915F-8C0B1294C420}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliParse.Tests", "cliparse.test\CliParse.Tests.csproj", "{8DD6B384-2A15-4EA5-915F-8C0B1294C420}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA7B3FAD-9B1E-482D-B897-79674450BFAA}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testsettings = LocalTestRun.testsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
