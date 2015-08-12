@@ -5,10 +5,11 @@ namespace CliParse
 {
     public class CliParseResult
     {
-        public bool Successful { get; protected set; }
-
+        public bool Successful { get; internal set; }
+        public bool ShowHelp { get; internal set; }
+        
         private List<string> messages;
-        public IEnumerable<string> CliParseMessages { get; protected set; }
+        public IEnumerable<string> CliParseMessages { get; internal set; }
 
         public CliParseResult()
         {

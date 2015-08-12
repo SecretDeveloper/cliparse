@@ -15,6 +15,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual("testname", simple.Field2);
         }
@@ -28,6 +29,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual("testname", simple.Field1);
         }
@@ -40,6 +42,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual(true, simple.Flag1);
         }
 
@@ -52,6 +55,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual(1, simple.Field3);
         }
@@ -64,6 +68,7 @@ namespace CliParse.Tests
             var cli = new RequiredCli();
             var result = cli.CliParse(args);
             Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
         }
 
         [TestCategory("Parsing")]
@@ -74,6 +79,48 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_handle_help_arguments()
+        {
+            var args = Utility.CommandLineToArgs("/help");
+            var simple = new SimpleCli();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
+
+            args = Utility.CommandLineToArgs("/?");
+            simple = new SimpleCli();
+            result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
+
+            args = Utility.CommandLineToArgs("//help");
+            simple = new SimpleCli();
+            result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
+
+            args = Utility.CommandLineToArgs("-?");
+            simple = new SimpleCli();
+            result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
+
+            args = Utility.CommandLineToArgs("--help");
+            simple = new SimpleCli();
+            result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
+
+            args = Utility.CommandLineToArgs("-help");
+            simple = new SimpleCli();
+            result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(true, result.ShowHelp);
         }
 
     }

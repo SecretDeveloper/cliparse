@@ -31,6 +31,8 @@ namespace CliParse
             var result = new CliParseResult();
 
             var tokens = Tokenizer.Tokenize(args).ToList();
+            result.ShowHelp = tokens.Any(IsHelpToken);
+
             var discoveredArguments = new List<ParsableArgument>();
 
             var parsableType = parsable.GetType();
@@ -46,18 +48,48 @@ namespace CliParse
             }
 
             // missing required fields
-            foreach (var argument in discoveredArguments.Where(argument => argument.Required).Where(argument => tokens.FirstOrDefault(x=> x.Type == TokenType.Field && (x.Value.Equals(argument.Name) || x.Value.Equals(argument.Name)))== null))
+            if (result.ShowHelp == false)
             {
-                result.AddErrorMessage(string.Format("Required ParsableArgument '{0}' was not supplied.",argument.ShortName));
+                foreach (
+                    var argument in
+                        discoveredArguments.Where(argument => argument.Required)
+                            .Where(
+                                argument =>
+                                    tokens.FirstOrDefault(
+                                        x =>
+                                            x.Type == TokenType.Field &&
+                                            (x.Value.Equals(argument.Name) || x.Value.Equals(argument.Name))) == null))
+                {
+                    result.AddErrorMessage(string.Format("Required ParsableArgument '{0}' was not supplied.",
+                        argument.ShortName));
+                }
             }
 
             // unknown aruments
-            foreach (var token in tokens.Where(token => token.Type == TokenType.Field).Where(token => !discoveredArguments.Any(x => ((x.Name != null && x.Name.Equals(token.Value)) || (x.ShortName.ToString().Equals(token.Value))))))
+            if (result.ShowHelp == false)
             {
-                result.AddErrorMessage(string.Format("Unknown argument '{0}' was supplied.", token.Value));
+                foreach (
+                    var token in
+                        tokens.Where(token => token.Type == TokenType.Field)
+                            .Where(
+                                token =>
+                                    !discoveredArguments.Any(
+                                        x =>
+                                            ((x.Name != null && x.Name.Equals(token.Value)) ||
+                                             (x.ShortName.ToString().Equals(token.Value))))))
+                {
+                    result.AddErrorMessage(string.Format("Unknown argument '{0}' was supplied.", token.Value));
+                }
             }
 
             return result;
+        }
+
+        private static bool IsHelpToken(Token token)
+        {
+            return token.Type == TokenType.Field && (
+                token.Value.ToString().IndexOf("help", System.StringComparison.OrdinalIgnoreCase) == 0
+                || token.Value.ToString().IndexOf("?", System.StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens, ParsableArgument parsableArgument, PropertyInfo prop)
