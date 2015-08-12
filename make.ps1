@@ -149,23 +149,25 @@ function createZip{
 function publish{
     # DEPLOYING
     write-host "Publishing Nuget package" -foregroundcolor:blue
-    $outputName = $projectName+$buildVersion+".nupkg"
+    $outputName = ".\releases\$projectName.$fullBuildVersion.nupkg"
     nuget push $outputName
 }
 
 $basePath = Get-Location
 $logPath = "$basePath\logs"
 $buildVersion = Get-Content .\VERSION
+$fullBuildVersion = "$buildVersion.0"
 $projectName = "CliParse"
 
-if($buildType -eq "package"){
+if($buildType -eq "publish"){
     
     $buildType="Release"
 
     clean
     build
     test    
-    pack   
+    pack 
+    publish  
 
     exit
 }
