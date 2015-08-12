@@ -14,6 +14,6 @@
     <tags>CommandLine Parse</tags>
   </metadata>
   <files>
-    <file src="..\..\BuildOutput\cliparse.dll" target=""/>
+    <file src="..\..\BuildOutput\cliparse.dll" target="lib"/>
   </files>
 </package>
