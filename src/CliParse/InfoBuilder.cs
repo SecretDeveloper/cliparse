@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -31,7 +32,7 @@ namespace CliParse
             var footer = GetAssemblyMetadataAttribute(asm, "footer");
             template = template.Replace("{footer}", footer);
 
-            return template;
+            return FormatTextForScreen(template, 80);
         }
 
         public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, string argumentPrefix)
@@ -53,17 +54,16 @@ namespace CliParse
             template = template.Replace("{example}", parsableClass.ExampleText);
             template = template.Replace("{footer}", parsableClass.FooterText);
 
-            return template;
+            return FormatTextForScreen(template, 80);
         }
 
-        private static object GetObjectAttribute(Parsable parsable, Type type)
+        internal static object GetObjectAttribute(Parsable parsable, Type type)
         {
             var parsableType = parsable.GetType();
             return parsableType.GetCustomAttributes(true).FirstOrDefault(x => x.GetType() == type);
         }
 
-
-        private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
+        internal static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
         {
             var arguments = GetListArgumentAttributes(parsable);
 
@@ -76,7 +76,7 @@ namespace CliParse
             return sb.ToString();
         }
 
-        private static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
+        internal static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
 
@@ -94,7 +94,7 @@ namespace CliParse
             return arguments;
         }
 
-        private static string GetAssemblyMetadataAttribute(Assembly asm, string key)
+        internal static string GetAssemblyMetadataAttribute(Assembly asm, string key)
         {
             var customAttributes = asm.GetCustomAttributes(typeof (AssemblyMetadataAttribute));
 
@@ -104,7 +104,7 @@ namespace CliParse
             return t == null ? "" : t.Value;
         }
 
-        private static string GetAssemblyAttribute(Assembly asm, Type type)
+        internal static string GetAssemblyAttribute(Assembly asm, Type type)
         {
             var customAttribute = asm.GetCustomAttributes(type).FirstOrDefault(x => x.GetType() == type);
             if (customAttribute == null) return "";
@@ -112,7 +112,7 @@ namespace CliParse
             return GetAssemblyAttributeValue(type, customAttribute);
         }
 
-        private static string GetAssemblyAttributeValue(Type type, Attribute customAttribute)
+        internal static string GetAssemblyAttributeValue(Type type, Attribute customAttribute)
         {
             if (type == typeof (AssemblyTitleAttribute))
             {
@@ -138,6 +138,101 @@ namespace CliParse
                 return t == null ? "" : t.Copyright;
             }
             return "";
+        }
+
+        internal static string FormatTextForScreen(string text, int maxLineLength)
+        {
+            var sb = new StringBuilder();
+            var lines = text.Split('\n');
+
+            foreach (string line in lines)
+            {
+                sb.Append(BreakStringToLength(line, maxLineLength));
+
+            }
+            return sb.ToString();
+        }
+
+        internal static string BreakStringToLength(string line, int maximumLineLength)
+        {
+            if (string.IsNullOrEmpty(line)) return "";
+            if (maximumLineLength <= 1) throw new ArgumentOutOfRangeException("maximumLineLength");
+            if (line.Length <= maximumLineLength - 1) return line;
+
+            var maxLineLength = maximumLineLength;
+
+            var sb = new StringBuilder();
+            var startingWhiteSpace = GetLeadingWhitespaceAsSpaces(line);
+            var startingWhiteSpaceLength = startingWhiteSpace.Length;
+
+            var currentIndex = 0;
+            var possibleIndex = 0;
+
+            var keepGoing = true;
+            while (keepGoing)
+            {
+                var scanIndex = line.IndexOf(' ', possibleIndex+1);
+                if (scanIndex != -1) scanIndex += 1;  // move to location after the space so we wrap at start of word.
+
+                if (scanIndex - currentIndex + startingWhiteSpaceLength > maxLineLength)
+                {
+                    sb.Append(line.Substring(currentIndex, possibleIndex - currentIndex));
+                    sb.AppendLine();
+                    sb.Append(startingWhiteSpace);
+                    currentIndex = possibleIndex;
+                }
+                // no more spaces
+                if (scanIndex == -1)
+                {
+                    var lengthRemaining = line.Length - currentIndex;
+                    if (currentIndex == 0)
+                    {
+                        if (lengthRemaining > maxLineLength)
+                        {
+                            sb.AppendLine(line.Substring(currentIndex, maxLineLength));
+                            sb.Append(startingWhiteSpace);
+                            currentIndex += maxLineLength;
+                        }
+                        else
+                        {
+                            sb.Append(line.Substring(currentIndex, lengthRemaining));
+                            keepGoing = false;
+                        }
+                    }
+                    else
+                    {
+                        if (lengthRemaining + startingWhiteSpaceLength > maxLineLength)
+                        {
+                            sb.AppendLine(line.Substring(currentIndex, maxLineLength - startingWhiteSpaceLength));
+                            sb.Append(startingWhiteSpace);
+                            currentIndex += maxLineLength - startingWhiteSpaceLength;
+                        }
+                        else
+                        {
+                            sb.Append(line.Substring(currentIndex, lengthRemaining));
+                            keepGoing = false;
+                        }
+                    }
+                }
+                else
+                {
+                    possibleIndex = scanIndex;
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        internal static string GetLeadingWhitespaceAsSpaces(string line)
+        {
+            int count = 0;
+            foreach (var c in line)
+            {
+                if (!Char.IsWhiteSpace(c)) break;
+                if (c == ' ') count++;
+                if (c.Equals('\t')) count += 4;
+            }
+            return new string(' ', count);
         }
     }
 }
