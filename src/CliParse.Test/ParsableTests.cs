@@ -10,14 +10,14 @@ namespace CliParse.Tests
         [TestMethod]
         public void can_parse_single_arguments_by_long_name()
         {
-            var args = Utility.CommandLineToArgs("/Field2 testname");
+            var args = Utility.CommandLineToArgs("/Fieldb testname");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
             Assert.AreEqual(false, result.ShowHelp);
 
-            Assert.AreEqual("testname", simple.Field2);
+            Assert.AreEqual("testname", simple.Fieldb);
         }
 
         [TestCategory("Parsing")]
@@ -31,7 +31,7 @@ namespace CliParse.Tests
             Assert.AreEqual(true, result.Successful);
             Assert.AreEqual(false, result.ShowHelp);
 
-            Assert.AreEqual("testname", simple.Field1);
+            Assert.AreEqual("testname", simple.Fielda);
         }
 
         [TestCategory("Parsing")]
@@ -43,7 +43,7 @@ namespace CliParse.Tests
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
             Assert.AreEqual(false, result.ShowHelp);
-            Assert.AreEqual(true, simple.Flag1);
+            Assert.AreEqual(true, simple.Flage);
         }
 
         [TestCategory("Parsing")]
@@ -55,10 +55,10 @@ namespace CliParse.Tests
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
             Assert.AreEqual(false, result.ShowHelp);
-            Assert.AreEqual(true, simple.Flag1);
+            Assert.AreEqual(true, simple.Flage);
 
-            Assert.AreEqual("defaultValue", simple.DefaultedField);
-            Assert.AreEqual(22, simple.Field3);
+            Assert.AreEqual("defaultValue", simple.Fieldc);
+            Assert.AreEqual(22, simple.Fieldf);
         }
 
         [TestCategory("Parsing")]
@@ -72,7 +72,7 @@ namespace CliParse.Tests
             Assert.AreEqual(true, result.Successful);
             Assert.AreEqual(false, result.ShowHelp);
 
-            Assert.AreEqual(1, simple.Field3);
+            Assert.AreEqual(1, simple.Fieldf);
         }
 
         [TestCategory("Parsing")]
