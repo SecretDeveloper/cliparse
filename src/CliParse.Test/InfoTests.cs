@@ -10,54 +10,164 @@ namespace CliParse.Tests
     [TestClass]
     public class InfoTests
     {
-//        [TestCategory("Information")]
-//        [TestMethod]
-//        public void can_generate_info_text_from_assembly_attributes()
-//        {
-//            var simple = new SimpleCli();
-//            var asm = Assembly.GetExecutingAssembly();
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_generate_info_text_from_assembly_attributes()
+        {
+            var simple = new SimpleCli();
+            var asm = Assembly.GetExecutingAssembly();
 
 
-//            var expected = @"cliparse.test 0.15.0.0//Gary Kenneally (@SecretDeveloper) [2015]//Description://    This assembly contains the unit tests for the cliparse library.    ////Syntax://    -a     //        required:N default:''//        //    -b --Fieldb    //        required:N default:''//        -b 'this is an example usage'//    -c --Fieldc    //        required:N default:'defaultValue'//        //    -e --Flage    //        required:N default:''//        //    -f --Fieldf    //        required:N default:'22'//        //    -g --Fieldg    This is a short description//        required:N default:''//        //    -h --Fieldh    This is a long description This is a long description 
-//    This is a long description This is a long description This is a long 
-//    description This is a long description This is a long description This is a 
-//    long description This is a long description This is a long description This 
-//    is a long description This is a long description.//        required:N default:''";
+            var expected = @"cliparse.test 0.15.0.0
+Gary Kenneally (@SecretDeveloper) [2015]
+Description:
+    This assembly contains the unit tests for the cliparse library.    
 
-//            var actual = simple.GetHelpInfoFromAssembly(asm);
-//            Assert.AreEqual(expected, actual);
-//        }
+Syntax:
+    -a     
+        
+        [Optional], Default:''
+        
+    -b --Fieldb    
+        
+        [Optional], Default:''
+        -b 'this is an example usage'
+    -c --Fieldc    
+        
+        [Optional], Default:'defaultValue'
+        
+    -e --Flage    
+        
+        [Optional], Default:''
+        
+    -f --Fieldf    
+        
+        [Optional], Default:'22'
+        
+    -g --Fieldg    
+        This is a short description
+        [Optional], Default:''
+        
+    -h --Fieldh    
+        This is a long description This is a long description This is a 
+        long description This is a long description This is a long description 
+        This is a long description This is a long description This is a long 
+        description This is a long description This is a long description This 
+        is a long description This is a long description.
+        [Optional], Default:''
+";
 
-//        [TestCategory("Information")]
-//        [TestMethod]
-//        public void can_generate_info_text_from_parsable_attributes()
-//        {
-//            var simple = new SimpleCli();
+            var actual = simple.GetHelpInfoFromAssembly(asm);
+            Assert.AreEqual(expected, actual);
+        }
 
-//            var expected = @"Simple CLI Test Class ////Description://    This is a description.    ////Syntax://    -a     //        required:N default:''//        //    -b --Fieldb    //        required:N default:''//        -b 'this is an example usage'//    -c --Fieldc    //        required:N default:'defaultValue'//        //    -e --Flage    //        required:N default:''//        //    -f --Fieldf    //        required:N default:'22'//        //    -g --Fieldg    This is a short description//        required:N default:''//        //    -h --Fieldh    This is a long description This is a long description 
-//    This is a long description This is a long description This is a long 
-//    description This is a long description This is a long description This is a 
-//    long description This is a long description This is a long description This 
-//    is a long description This is a long description.//        required:N default:''";
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_generate_info_text_from_parsable_attributes()
+        {
+            var simple = new SimpleCli();
 
-//            var actual = simple.GetHelpInfo();
-//            Assert.AreEqual(expected, actual);
-//        }
+            var expected = @"Simple CLI Test Class 
 
-//        [TestCategory("Information")]
-//        [TestMethod]
-//        public void can_generate_info_text_from_parsable_attributes_advanced()
-//        {
-//            var simple = new CommandLineArgs();
+Description:
+    This is a description.    
 
-//            var expected = @"TDG ////Description://    Test Data Generation tool    ////Syntax://    -t --template    The template containing 1 or more patterns to use when 
-//    producing data.//        required:N default:''//        //    -p --pattern    The pattern to use when producing data.//        required:N default:''//        //    -d --detailed    Show help text for pattern symbols//        required:N default:'False'//        //    -i --inputfile    The path of the input file.//        required:N default:''//        //    -o --output    The path of the output file.//        required:N default:''//        //    -c --count    The number of items to produce.//        required:N default:'1'//        //    -s --seed    The seed value for random generation. Default is a random value
-//    .//        required:N default:''//        //    -v --verbose    Verbose output including debug and performance information.//        required:N default:'False'//        //    -n --namedpatterns    A list of ';' seperated file paths containing 
-//    named patterns to be used in addition to default.tdg-patterns.//        required:N default:''//        //    -l --listnamedpatterns    Outputs a list of the named patterns from the 
-//    default.tdg-patterns file.//        required:N default:'False'";
-//            var actual = simple.GetUsage();
-//            Assert.AreEqual(expected, actual);
-//        }
+Syntax:
+    -a     
+        
+        [Optional], Default:''
+        
+    -b --Fieldb    
+        
+        [Optional], Default:''
+        -b 'this is an example usage'
+    -c --Fieldc    
+        
+        [Optional], Default:'defaultValue'
+        
+    -e --Flage    
+        
+        [Optional], Default:''
+        
+    -f --Fieldf    
+        
+        [Optional], Default:'22'
+        
+    -g --Fieldg    
+        This is a short description
+        [Optional], Default:''
+        
+    -h --Fieldh    
+        This is a long description This is a long description This is a 
+        long description This is a long description This is a long description 
+        This is a long description This is a long description This is a long 
+        description This is a long description This is a long description This 
+        is a long description This is a long description.
+        [Optional], Default:''
+";
+
+            var actual = simple.GetHelpInfo();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_generate_info_text_from_parsable_attributes_advanced()
+        {
+            var simple = new CommandLineArgs();
+
+            var expected = @"TDG 
+
+Description:
+    Test Data Generation tool    
+
+Syntax:
+    -t --template    
+        The template containing 1 or more patterns to use when producing data.
+        [Optional], Default:''
+        
+    -p --pattern    
+        The pattern to use when producing data.
+        [Optional], Default:''
+        
+    -d --detailed    
+        Show help text for pattern symbols
+        [Optional], Default:'False'
+        
+    -i --inputfile    
+        The path of the input file.
+        [Optional], Default:''
+        
+    -o --output    
+        The path of the output file.
+        [Optional], Default:''
+        
+    -c --count    
+        The number of items to produce.
+        [Optional], Default:'1'
+        
+    -s --seed    
+        The seed value for random generation. Default is a random value.
+        [Optional], Default:''
+        
+    -v --verbose    
+        Verbose output including debug and performance information.
+        [Optional], Default:'False'
+        
+    -n --namedpatterns    
+        A list of ';' seperated file paths containing named patterns to 
+        be used in addition to default.tdg-patterns.
+        [Optional], Default:''
+        
+    -l --listnamedpatterns    
+        Outputs a list of the named patterns from the 
+        default.tdg-patterns file.
+        [Optional], Default:'False'
+";
+
+            var actual = simple.GetUsage();
+            Assert.AreEqual(expected, actual);
+        }
 
         [TestCategory("Information")]
         [TestMethod]

@@ -148,7 +148,7 @@ namespace CliParse
 
             foreach (string line in lines)
             {
-                sb.Append(BreakStringToLength(line, maxLineLength));
+                sb.AppendLine(BreakStringToLength(line, maxLineLength));
 
             }
             return sb.ToString();
