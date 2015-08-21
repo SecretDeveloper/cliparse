@@ -144,7 +144,7 @@ namespace CliParse
         internal static string FormatTextForScreen(string text, int maxLineLength)
         {
             var sb = new StringBuilder();
-            var lines = text.Split('\n');
+            var lines = text.Replace("\r", "").Split('\n');
 
             foreach (string line in lines)
             {

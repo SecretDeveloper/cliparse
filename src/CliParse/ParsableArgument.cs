@@ -12,8 +12,9 @@ namespace CliParse
         public bool Required { get; set; }
 
         public const string DefaultPrefix = "-";
-        public const string DefaultTemplate = @"    {shortname} {name}    {description}
-        required:{required} default:'{defaultvalue}'
+        public const string DefaultTemplate = @"    {shortname} {name}    
+        {description}
+        {required}, Default:'{defaultvalue}'
         {example}";
 
         public ParsableArgument(char shortName)
@@ -33,7 +34,7 @@ namespace CliParse
             syntax = syntax.Replace("{shortname}", String.IsNullOrEmpty(ShortName.ToString())?"":prefix+ShortName);
             syntax = syntax.Replace("{description}", String.IsNullOrEmpty(Description) ? "" : Description);
             syntax = syntax.Replace("{example}", String.IsNullOrEmpty(Example) ? "" : Example);
-            syntax = syntax.Replace("{required}", Required ? "Y" : "N");
+            syntax = syntax.Replace("{required}", Required ? "Required" : "[Optional]");
             syntax = syntax.Replace("{defaultvalue}", DefaultValue == null ? "" : DefaultValue.ToString());
 
             return syntax;
