@@ -24,7 +24,7 @@ namespace CliParse
             template = template.Replace("{description}", description);
             
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
-            template = template.Replace("{syntax}", FormatTextForScreen(syntax,80));
+            template = template.Replace("{syntax}", syntax);
             
             var copyright = GetAssemblyAttribute(asm, typeof (AssemblyCopyrightAttribute));
             template = template.Replace("{copyright}", copyright);
@@ -32,7 +32,7 @@ namespace CliParse
             var footer = GetAssemblyMetadataAttribute(asm, "footer");
             template = template.Replace("{footer}", footer);
 
-            return FormatTextForScreen(template, 80);
+            return FormatTextForScreen(template.Trim(), 80);
         }
 
         public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, string argumentPrefix)
@@ -45,7 +45,8 @@ namespace CliParse
 
             template = template.Replace("{title}", parsableClass.Title);
             template = template.Replace("{description}", parsableClass.Description);
-            template = template.Replace("{copyright}", parsableClass.Copyright);
+
+            template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright)? "": string.Format("Copyright (C) {0}", parsableClass.Copyright));
             template = template.Replace("{version}", parsableClass.Version);
 
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
@@ -54,7 +55,7 @@ namespace CliParse
             template = template.Replace("{example}", parsableClass.ExampleText);
             template = template.Replace("{footer}", parsableClass.FooterText);
 
-            return FormatTextForScreen(template, 80);
+            return FormatTextForScreen(template.Trim(), 80);
         }
 
         internal static object GetObjectAttribute(Parsable parsable, Type type)
