@@ -48,7 +48,7 @@ namespace CliParse.Tests
 
         [TestCategory("Parsing")]
         [TestMethod]
-        public void can_default_values()
+        public void can_set_default_values()
         {
             var args = Utility.CommandLineToArgs("/e");
             var simple = new SimpleCli();
@@ -59,6 +59,18 @@ namespace CliParse.Tests
 
             Assert.AreEqual("defaultValue", simple.Fieldc);
             Assert.AreEqual(22, simple.Fieldf);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_set_nullable_default_values()
+        {
+            var args = Utility.CommandLineToArgs("-s 100");
+            var simple = new CommandLineArgs();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual(100, simple.Seed);
         }
 
         [TestCategory("Parsing")]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -110,8 +111,8 @@ namespace CliParse
                     var tokenValue = tokens.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
                     if(tokenValue == null) throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
 
-                    prop.SetValue(parsable, Convert.ChangeType(tokenValue.Value, prop.PropertyType));
-                    
+                    PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(parsable)[prop.Name];
+                    prop.SetValue(parsable, propertyDescriptor.Converter.ConvertFrom(tokenValue.Value));
                 }
             }
             else if (parsableArgument.DefaultValue != null)
