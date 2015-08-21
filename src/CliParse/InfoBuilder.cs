@@ -16,19 +16,19 @@ namespace CliParse
 
             var title = GetAssemblyAttribute(asm, typeof (AssemblyTitleAttribute));
             template = template.Replace("{title}", title);
+            
+            var version = asm.GetName().Version.ToString();
+            template = template.Replace("{version}", version);
 
             var description = GetAssemblyAttribute(asm, typeof (AssemblyDescriptionAttribute));
             template = template.Replace("{description}", description);
             
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
-            template = template.Replace("{syntax}", syntax);
+            template = template.Replace("{syntax}", FormatTextForScreen(syntax,80));
             
             var copyright = GetAssemblyAttribute(asm, typeof (AssemblyCopyrightAttribute));
             template = template.Replace("{copyright}", copyright);
-
-            var version = asm.GetName().Version.ToString();
-            template = template.Replace("{version}", version);
-
+            
             var footer = GetAssemblyMetadataAttribute(asm, "footer");
             template = template.Replace("{footer}", footer);
 

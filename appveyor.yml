@@ -1,0 +1,4 @@
+test:
+  # assemblies to test - optional
+  assemblies:
+    - 'TestOutput\*.Tests.dll'

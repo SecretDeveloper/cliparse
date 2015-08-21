@@ -4,12 +4,12 @@ namespace CliParse
 {
     public class ParsableClass : Attribute
     {
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public string Version { get; private set; }
-        public string Copyright { get; private set; }
-        public string ExampleText { get; private set; }
-        public string FooterText { get; private set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Version { get; set; }
+        public string Copyright { get; set; }
+        public string ExampleText { get; set; }
+        public string FooterText { get; set; }
 
         public ParsableClass(string title, string description = "")
         {
