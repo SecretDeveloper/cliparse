@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
-using System.Text;
-using CliParse;
 using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -268,14 +267,14 @@ xbnouoeiuwaiad aio geiqpouicewysi";
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
 
             Console.WriteLine("Expected");
-            Console.WriteLine(expected);
+            Console.WriteLine("'"+expected+"'");
             Console.WriteLine("Actual");
-            Console.WriteLine(actual);
+            Console.WriteLine("'"+actual+"'");
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.Name);
+            Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.Name);
 
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(string.Equals(expected, actual, StringComparison.InvariantCulture));
 
         }
     }

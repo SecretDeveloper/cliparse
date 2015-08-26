@@ -146,7 +146,7 @@ function vstest{
     #write-host "get-childitem -path $basePath\TestOutput\*.* -include *.Tests.dll"
     
     $arguments = "$testDLLs"
-    #write-host "mstest $resultFile $arguments"
+    write-host "vstest.console.exe $arguments"
     Invoke-Expression "vstest.console.exe $arguments > $logPath\LogTest.log"
 
     if(!$LastExitCode -eq 0){

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -58,13 +57,13 @@ namespace CliParse
             return FormatTextForScreen(template.Trim(), 80);
         }
 
-        internal static object GetObjectAttribute(Parsable parsable, Type type)
+        private static object GetObjectAttribute(Parsable parsable, Type type)
         {
             var parsableType = parsable.GetType();
             return parsableType.GetCustomAttributes(true).FirstOrDefault(x => x.GetType() == type);
         }
 
-        internal static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
+        private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
         {
             var arguments = GetListArgumentAttributes(parsable);
 
@@ -77,7 +76,7 @@ namespace CliParse
             return sb.ToString();
         }
 
-        internal static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
+        private static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
 
@@ -87,15 +86,12 @@ namespace CliParse
             var arguments = new List<ParsableArgument>();
             foreach (var prop in properties)
             {
-                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgument>())
-                {
-                    arguments.Add(argument);
-                }
+                arguments.AddRange(prop.GetCustomAttributes(true).OfType<ParsableArgument>());
             }
             return arguments;
         }
 
-        internal static string GetAssemblyMetadataAttribute(Assembly asm, string key)
+        private static string GetAssemblyMetadataAttribute(Assembly asm, string key)
         {
             var customAttributes = asm.GetCustomAttributes(typeof (AssemblyMetadataAttribute));
 
@@ -105,7 +101,7 @@ namespace CliParse
             return t == null ? "" : t.Value;
         }
 
-        internal static string GetAssemblyAttribute(Assembly asm, Type type)
+        private static string GetAssemblyAttribute(Assembly asm, Type type)
         {
             var customAttribute = asm.GetCustomAttributes(type).FirstOrDefault(x => x.GetType() == type);
             if (customAttribute == null) return "";
@@ -113,7 +109,7 @@ namespace CliParse
             return GetAssemblyAttributeValue(type, customAttribute);
         }
 
-        internal static string GetAssemblyAttributeValue(Type type, Attribute customAttribute)
+        private static string GetAssemblyAttributeValue(Type type, Attribute customAttribute)
         {
             if (type == typeof (AssemblyTitleAttribute))
             {
@@ -141,7 +137,7 @@ namespace CliParse
             return "";
         }
 
-        internal static string FormatTextForScreen(string text, int maxLineLength)
+        private static string FormatTextForScreen(string text, int maxLineLength)
         {
             var sb = new StringBuilder();
             var lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -224,7 +220,7 @@ namespace CliParse
             return sb.ToString();
         }
 
-        internal static string GetLeadingWhitespaceAsSpaces(string line)
+        private static string GetLeadingWhitespaceAsSpaces(string line)
         {
             int count = 0;
             foreach (var c in line)

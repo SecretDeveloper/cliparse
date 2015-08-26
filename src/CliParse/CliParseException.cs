@@ -1,9 +1,9 @@
 using System;
-using System.IO;
 using System.Runtime.Serialization;
 
 namespace CliParse
 {
+    [Serializable]
     public class CliParseException : Exception
     {
         public CliParseException(string message) : base(message){}

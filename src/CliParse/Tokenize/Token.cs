@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CliParse.Tokenize
 {
@@ -28,14 +24,13 @@ namespace CliParse.Tokenize
             {
                 if (arg.StartsWith("/") || arg.StartsWith("-"))
                 {
-                    yield return new Token(){Index = index++, Value=arg.TrimStart('-','/'), Type = TokenType.Field};
+                    yield return new Token {Index = index++, Value=arg.TrimStart('-','/'), Type = TokenType.Field};
                 }
                 else
                 {
-                    yield return new Token() { Index = index++, Value = arg, Type = TokenType.Value };
+                    yield return new Token { Index = index++, Value = arg, Type = TokenType.Value };
                 }
             }
-            yield break;
         }
     }
 }
