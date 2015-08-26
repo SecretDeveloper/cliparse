@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace CliParse
 {
@@ -31,7 +32,7 @@ namespace CliParse
         public string GetSyntax(string template, string prefix)
         {
             var syntax = template.Replace("{name}", String.IsNullOrEmpty(Name)?"":prefix+prefix+Name);
-            syntax = syntax.Replace("{shortname}", String.IsNullOrEmpty(ShortName.ToString())?"":prefix+ShortName);
+            syntax = syntax.Replace("{shortname}", String.IsNullOrEmpty(ShortName.ToString(CultureInfo.InvariantCulture))?"":prefix+ShortName);
             syntax = syntax.Replace("{description}", String.IsNullOrEmpty(Description) ? "" : Description);
             syntax = syntax.Replace("{example}", String.IsNullOrEmpty(Example) ? "" : Example);
             syntax = syntax.Replace("{required}", Required ? "Required" : "[Optional]");

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using CliParse.Tokenize;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,7 +11,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void Can_Parse_Flags()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/a");
+            var args = NativeMethods.CommandLineToArgs("/a");
             var tokens = Tokenizer.Tokenize(args);
 
             Assert.AreEqual(1, tokens.Count());
@@ -20,7 +19,7 @@ namespace CliParse.Tests
             Assert.AreEqual(tokens.FirstOrDefault().Value, "a");
             Assert.AreEqual(tokens.FirstOrDefault().Type, TokenType.Field);
 
-            args = CliParse.Utility.CommandLineToArgs("-a");
+            args = NativeMethods.CommandLineToArgs("-a");
             tokens = Tokenizer.Tokenize(args);
 
             Assert.AreEqual(1, tokens.Count());
@@ -33,7 +32,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void Can_Parse_FieldValues()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/a myvalue");
+            var args = NativeMethods.CommandLineToArgs("/a myvalue");
             var tokens = Tokenizer.Tokenize(args).ToList();
 
             Assert.AreEqual(2, tokens.Count());
@@ -51,7 +50,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void Can_Handle_Quoted_Values()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/a \"this is a quoted value\"");
+            var args = NativeMethods.CommandLineToArgs("/a \"this is a quoted value\"");
             var tokens = Tokenizer.Tokenize(args).ToList();
 
             Assert.AreEqual(2, tokens.Count());
@@ -69,7 +68,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void Can_Handle_URLs()
         {
-            var args = CliParse.Utility.CommandLineToArgs("/a http://google.com?q=asdf-gg");
+            var args = NativeMethods.CommandLineToArgs("/a http://google.com?q=asdf-gg");
             var tokens = Tokenizer.Tokenize(args).ToList();
 
             Assert.AreEqual(2, tokens.Count());

@@ -10,7 +10,7 @@ namespace CliParse
 {
     public static class Parser
     {
-        public static CliParseResult Parse(Parsable parsable, string[] args)
+        public static CliParseResult Parse(Parsable parsable, IEnumerable<string> args)
         {
             var result = new CliParseResult();
             try
@@ -27,7 +27,7 @@ namespace CliParse
             return result;
         }
 
-        private static CliParseResult MapArguments(Parsable parsable, string[] args)
+        private static CliParseResult MapArguments(Parsable parsable, IEnumerable<string> args)
         {
             var result = new CliParseResult();
 
@@ -77,7 +77,7 @@ namespace CliParse
                                     !discoveredArguments.Any(
                                         x =>
                                             ((x.Name != null && x.Name.Equals(token.Value)) ||
-                                             (x.ShortName.ToString().Equals(token.Value))))))
+                                             (x.ShortName.ToString(CultureInfo.InvariantCulture).Equals(token.Value))))))
                 {
                     result.AddErrorMessage(string.Format("Unknown argument '{0}' was supplied.", token.Value));
                 }
@@ -89,17 +89,19 @@ namespace CliParse
         private static bool IsHelpToken(Token token)
         {
             return token.Type == TokenType.Field && (
-                token.Value.ToString().IndexOf("help", System.StringComparison.OrdinalIgnoreCase) == 0
-                || token.Value.ToString().IndexOf("?", System.StringComparison.OrdinalIgnoreCase) == 0);
+                token.Value.ToString().IndexOf("help", StringComparison.OrdinalIgnoreCase) == 0
+                || token.Value.ToString().IndexOf("?", StringComparison.OrdinalIgnoreCase) == 0);
         }
 
-        private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens, ParsableArgument parsableArgument, PropertyInfo prop)
+        private static void SetPropertyValue(Parsable parsable, IEnumerable<Token> tokens,
+            ParsableArgument parsableArgument, PropertyInfo prop)
         {
             // shortnames are unique and required so use as key in dict.
-            var shortName = parsableArgument.ShortName.ToString();
+            var shortName = parsableArgument.ShortName.ToString(CultureInfo.InvariantCulture);
             var longName = parsableArgument.Name;
-            
-            var token = tokens.FirstOrDefault(x => x.Value.Equals(shortName) || x.Value.Equals(longName));
+
+            var tokentsArray = tokens as Token[] ?? tokens.ToArray();
+            var token = tokentsArray.FirstOrDefault(x => x.Value.Equals(shortName) || x.Value.Equals(longName));
             if (token != null && token.Type == TokenType.Field)
             {
                 if (prop.PropertyType == typeof (bool))
@@ -108,11 +110,15 @@ namespace CliParse
                 }
                 else
                 {
-                    var tokenValue = tokens.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
-                    if(tokenValue == null) throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
+                    var tokenValue = tokentsArray.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
+                    if (tokenValue == null)
+                        throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
 
                     PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(parsable)[prop.Name];
-                    prop.SetValue(parsable, propertyDescriptor.Converter.ConvertFrom(tokenValue.Value));
+                    prop.SetValue(parsable,
+                        propertyDescriptor.Converter != null
+                            ? propertyDescriptor.Converter.ConvertFrom(tokenValue.Value)
+                            : tokenValue);
                 }
             }
             else if (parsableArgument.DefaultValue != null)
@@ -120,11 +126,5 @@ namespace CliParse
                 prop.SetValue(parsable, parsableArgument.DefaultValue);
             }
         }
-
-        private static string CleanName(string argumentName)
-        {
-            return argumentName.Replace("-", "").Replace("/","").ToLower(CultureInfo.InvariantCulture);
-        }
-
     }
 }

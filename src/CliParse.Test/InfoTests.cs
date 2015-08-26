@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Text;
-using CliParse;
 using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
