@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -271,7 +272,8 @@ xbnouoeiuwaiad aio geiqpouicewysi";
             Console.WriteLine(actual);
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.DisplayName);
+            Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.DisplayName);
 
             Assert.AreEqual(expected, actual);
 
