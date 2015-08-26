@@ -267,9 +267,9 @@ xbnouoeiuwaiad aio geiqpouicewysi";
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
 
             Console.WriteLine("Expected");
-            Console.WriteLine(expected);
+            Console.WriteLine("'"+expected+"'");
             Console.WriteLine("Actual");
-            Console.WriteLine(actual);
+            Console.WriteLine("'"+actual+"'");
             Console.WriteLine();
             Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.Name);
             Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.Name);
