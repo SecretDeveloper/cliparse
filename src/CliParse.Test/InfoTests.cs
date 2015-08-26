@@ -271,11 +271,10 @@ xbnouoeiuwaiad aio geiqpouicewysi";
             Console.WriteLine("Actual");
             Console.WriteLine(actual);
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.DisplayName);
-            Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.DisplayName);
+            Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.Name);
+            Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.Name);
 
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(string.Equals(expected, actual, StringComparison.InvariantCulture));
 
         }
     }
