@@ -102,12 +102,12 @@ namespace CliParse.Tests
         [TestMethod]
         public void enforces_required_fields()
         {
-            var args = NativeMethods.CommandLineToArgs("/e");
+            var args = NativeMethods.CommandLineToArgs("");
             var cli = new RequiredCli();
             var result = cli.CliParse(args);
 
             Assert.AreEqual(false, result.Successful);
-            Assert.AreEqual(2, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
         }
 
@@ -171,11 +171,24 @@ namespace CliParse.Tests
             Assert.AreEqual(true, result.ShowHelp);
         }
 
-      /*  [TestCategory("Parsing")]
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void required_and_unknown_property_checking()
+        {
+            var args = NativeMethods.CommandLineToArgs("-r c:\\Temp");
+            var simple = new RequiredCli();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(2, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("Parsing")]
         [TestMethod]
         public void specific_issue_1()
         {
-            var args = NativeMethods.CommandLineToArgs("c:\\Temp");
+            var args = NativeMethods.CommandLineToArgs("-p c:\\Temp");
             var simple = new AnalysisOptions();
             var result = simple.CliParse(args);
 
@@ -184,6 +197,6 @@ namespace CliParse.Tests
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual("c:\\Temp", simple.Path);
         }
-        */
+        
     }
 }

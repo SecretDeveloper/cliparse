@@ -51,20 +51,19 @@ namespace CliParse
             // missing required fields
             if (result.ShowHelp == false)
             {
-                foreach (
-                    var argument in
-                        discoveredArguments.Where(argument => argument.Required)
-                            .Where(
-                                argument =>
-                                    tokens.FirstOrDefault(
-                                        x =>
-                                            x.Type == TokenType.Field &&
-                                            (x.Value.Equals(argument.Name) || x.Value.Equals(argument.Name))) == null))
+                foreach (var requiredArgument in discoveredArguments.Where(argument => argument.Required))
                 {
-                    result.AddErrorMessage(string.Format("Required ParsableArgument '{0}' was not supplied.",
-                        argument.ShortName));
+                    var token =
+                        tokens.FirstOrDefault(
+                            x =>
+                                x.Type == TokenType.Field &&
+                                (x.Value.Equals(requiredArgument.Name) || x.Value.Equals(requiredArgument.ShortName.ToString(CultureInfo.InvariantCulture))));
+                    if(token == null)
+                        result.AddErrorMessage(string.Format("Required ParsableArgument '{0}, {1}' was not supplied.",
+                        requiredArgument.ShortName, requiredArgument.Name));
                 }
             }
+            
 
             // unknown aruments
             if (result.ShowHelp == false)
