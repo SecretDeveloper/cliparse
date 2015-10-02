@@ -1,4 +1,5 @@
-﻿using CliParse.Tests.ParsableObjects;
+﻿using System.Linq;
+using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CliParse.Tests
@@ -15,6 +16,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual("testname", simple.Fieldb);
@@ -29,6 +31,7 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual("testname", simple.Fielda);
@@ -41,7 +44,9 @@ namespace CliParse.Tests
             var args = NativeMethods.CommandLineToArgs("/e");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
+
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual(true, simple.Flage);
         }
@@ -53,7 +58,9 @@ namespace CliParse.Tests
             var args = NativeMethods.CommandLineToArgs("/e");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
+
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual(true, simple.Flage);
 
@@ -68,7 +75,9 @@ namespace CliParse.Tests
             var args = NativeMethods.CommandLineToArgs("-s 100");
             var simple = new CommandLineArgs();
             var result = simple.CliParse(args);
+
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual(100, simple.Seed);
         }
@@ -81,7 +90,9 @@ namespace CliParse.Tests
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
+
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
 
             Assert.AreEqual(1, simple.Fieldf);
@@ -94,7 +105,9 @@ namespace CliParse.Tests
             var args = NativeMethods.CommandLineToArgs("/e");
             var cli = new RequiredCli();
             var result = cli.CliParse(args);
+
             Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(2, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
         }
 
@@ -105,7 +118,9 @@ namespace CliParse.Tests
             var args = NativeMethods.CommandLineToArgs("/unknownflag testflag");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
+
             Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
         }
 
@@ -117,38 +132,58 @@ namespace CliParse.Tests
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
             args = NativeMethods.CommandLineToArgs("/?");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
             args = NativeMethods.CommandLineToArgs("//help");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
             args = NativeMethods.CommandLineToArgs("-?");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
             args = NativeMethods.CommandLineToArgs("--help");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
             args = NativeMethods.CommandLineToArgs("-help");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
         }
 
+      /*  [TestCategory("Parsing")]
+        [TestMethod]
+        public void specific_issue_1()
+        {
+            var args = NativeMethods.CommandLineToArgs("c:\\Temp");
+            var simple = new AnalysisOptions();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual("c:\\Temp", simple.Path);
+        }
+        */
     }
 }

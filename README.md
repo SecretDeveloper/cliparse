@@ -3,7 +3,7 @@
 #CliParse
 ##### Pronounced "CLI Parse", never "Clip Arse" :)
 A simple command line parsing library for .net which maps CLI arguments to properties on a class.
-[<img src="https://ci.appveyor.com/api/projects/status/ns1phqxvwif0s2nn?svg=true">](https://ci.appveyor.com/project/SecretDeveloper/cliparse)
+[<img src="https://img.shields.io/appveyor/ci/secretdeveloper/cliparse/master.svg">](https://ci.appveyor.com/project/SecretDeveloper/cliparse)
 [<img src="https://img.shields.io/nuget/dt/cliparse.svg">](https://www.nuget.org/packages/CliParse/)
 
 ##Usage

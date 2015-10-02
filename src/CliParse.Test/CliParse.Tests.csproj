@@ -51,6 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ParsableObjects\CommandLineArgs.cs" />
+    <Compile Include="ParsableObjects\AnalysisOptions.cs" />
     <Compile Include="ParsableObjects\RequiredCli.cs" />
     <Compile Include="ParsableObjects\SimpleCli.cs" />
     <Compile Include="ParsableTests.cs" />

@@ -221,7 +221,7 @@ if($buildType -eq "publish"){
 
     clean
     build
-    test    
+    vstest    
     pack 
     publish  
 

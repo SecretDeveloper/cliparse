@@ -8,7 +8,11 @@ namespace CliParse
         public bool ShowHelp { get; internal set; }
         
         private readonly List<string> _messages;
-        public IEnumerable<string> CliParseMessages { get; internal set; }
+
+        public IEnumerable<string> CliParseMessages
+        {
+            get { return _messages; }
+        }
 
         public CliParseResult()
         {
