@@ -1,6 +1,6 @@
 ﻿namespace CliParse.Tests.ParsableObjects
 {
-    [ParsableClass("Simple CLI Test Class", "This is a description.")]
+    [ParsableClass("Simple CLI Test Class", "This is a description.", FooterText = "This is the footer text.")]
     public class SimpleCli:Parsable
     {
         /// <summary>

@@ -103,6 +103,9 @@ Syntax:
         description This is a long description This is a long description This 
         is a long description This is a long description.
         [Optional], Default:''
+        
+
+This is the footer text.
 ";
 
             var actual = simple.GetHelpInfo();
