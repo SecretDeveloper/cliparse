@@ -5,6 +5,7 @@ namespace CliParse
 {
     public class ParsableArgument : Attribute
     {
+        public int? ImpliedPosition { get; private set; }
         public string Name { get; private set; }
         public char ShortName { get; private set; }
         public object DefaultValue { get; set; }
@@ -31,7 +32,8 @@ namespace CliParse
 
         public string GetSyntax(string template, string prefix)
         {
-            var syntax = template.Replace("{name}", String.IsNullOrEmpty(Name)?"":prefix+prefix+Name);
+            var syntax = template;
+            syntax = syntax.Replace("{name}", String.IsNullOrEmpty(Name)?"":prefix+prefix+Name);
             syntax = syntax.Replace("{shortname}", String.IsNullOrEmpty(ShortName.ToString(CultureInfo.InvariantCulture))?"":prefix+ShortName);
             syntax = syntax.Replace("{description}", String.IsNullOrEmpty(Description) ? "" : Description);
             syntax = syntax.Replace("{example}", String.IsNullOrEmpty(Example) ? "" : Example);
