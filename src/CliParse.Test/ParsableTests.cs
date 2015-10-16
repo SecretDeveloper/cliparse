@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CliParse.Tests.ParsableObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CliParse.Tests
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class ParsableTests
     {
         [TestCategory("Parsing")]
@@ -197,6 +200,81 @@ namespace CliParse.Tests
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual("c:\\Temp", simple.Path);
         }
-        
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_argument_by_implied_position()
+        {
+            var args = NativeMethods.CommandLineToArgs("c:\\Temp");
+            var simple = new AnalysisOptions();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual("c:\\Temp", simple.Path);
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        public void can_return_error_message_for_null_arguments()
+        {
+            var simple = new AnalysisOptions();
+            var result = simple.CliParse(null);
+
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        [ExpectedException(typeof (CliParseException))]
+        public void can_return_error_message_for_non_parsable_object()
+        {
+            var broken = new BrokenUnattributedParsable();
+            broken.GetHelpInfo();
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void can_return_error_message_for_null_parsable_object()
+        {
+            BrokenUnattributedParsable broken = null;
+            broken.GetHelpInfo();
+        }
+
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void can_return_error_message_for_null_parsable_object_from_assembly()
+        {
+            BrokenUnattributedParsable broken = null;
+            broken.GetHelpInfoFromAssembly(null);
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void can_return_error_message_for_parsable_object_from_null_assembly()
+        {
+            BrokenUnattributedParsable broken = null;
+            broken.GetHelpInfoFromAssembly(null);
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        public void can_error_missing_values()
+        {
+            var args = NativeMethods.CommandLineToArgs("/a");
+
+            var simple = new SimpleCli();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
     }
 }

@@ -19,6 +19,9 @@ namespace CliParse
             var version = asm.GetName().Version.ToString();
             template = template.Replace("{version}", version);
 
+            var company = GetAssemblyAttribute(asm, typeof(AssemblyCompanyAttribute));
+            template = template.Replace("{company}", company);
+
             var description = GetAssemblyAttribute(asm, typeof (AssemblyDescriptionAttribute));
             template = template.Replace("{description}", description);
             
@@ -78,8 +81,6 @@ namespace CliParse
 
         private static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
         {
-            if (parsable == null) throw new ArgumentNullException("parsable");
-
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
 

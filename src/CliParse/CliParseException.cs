@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace CliParse
 {
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public class CliParseException : Exception
     {
         public CliParseException(string message) : base(message){}

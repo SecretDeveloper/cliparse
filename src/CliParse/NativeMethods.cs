@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace CliParse
 {
+    [ExcludeFromCodeCoverage]
     internal static class NativeMethods
     {
         [DllImport("shell32.dll", SetLastError = true)]

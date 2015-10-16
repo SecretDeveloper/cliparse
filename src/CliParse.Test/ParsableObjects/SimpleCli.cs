@@ -6,7 +6,7 @@
         /// <summary>
         /// 'a'
         /// </summary>
-        [ParsableArgument('a')]
+        [ParsableArgument("a")]
         public string Fielda
         {
             get;
@@ -16,7 +16,7 @@
         /// <summary>
         /// 'b' Field2
         /// </summary>
-        [ParsableArgument('b', "Fieldb", Example = "-b 'this is an example usage'")]
+        [ParsableArgument("Fieldb", ShortName = 'b', Example = "-b 'this is an example usage'")]
         public string Fieldb
         {
             get;
@@ -26,7 +26,7 @@
         /// <summary>
         /// 'c' DefaultedField, defaultValue
         /// </summary>
-        [ParsableArgument('c', "Fieldc", DefaultValue = "defaultValue")]
+        [ParsableArgument("Fieldc", ShortName = 'c', DefaultValue = "defaultValue")]
         public string Fieldc
         {
             get;
@@ -36,7 +36,7 @@
         /// <summary>
         /// 'e' Flag1
         /// </summary>
-        [ParsableArgument('e', "Flage")]
+        [ParsableArgument("Flage", ShortName = 'e')]
         public bool Flage
         {
             get;
@@ -46,7 +46,7 @@
         /// <summary>
         /// 'f' Flag3
         /// </summary>
-        [ParsableArgument('f', "Fieldf", DefaultValue = 22)]
+        [ParsableArgument("Fieldf", ShortName = 'f', DefaultValue = 22)]
         public int Fieldf
         {
             get;
@@ -56,7 +56,7 @@
         /// <summary>
         /// 'g' Flag4
         /// </summary>
-        [ParsableArgument('g', "Fieldg", Description = "This is a short description")]
+        [ParsableArgument("Fieldg", ShortName = 'g', Description = "This is a short description")]
         public int Fieldg
         {
             get;
@@ -66,7 +66,7 @@
         /// <summary>
         /// 'h' Flag5
         /// </summary>
-        [ParsableArgument('h', "Fieldh", Description = "This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description.")]
+        [ParsableArgument("Fieldh", ShortName = 'h', Description = "This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description.")]
         public int Fieldh
         {
             get;

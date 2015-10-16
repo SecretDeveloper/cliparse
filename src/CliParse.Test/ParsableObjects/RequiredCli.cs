@@ -5,7 +5,7 @@
         /// <summary>
         /// 'd' RequiredField
         /// </summary>
-        [ParsableArgument('d', "RequiredField", Required = true)]
+        [ParsableArgument("RequiredField", ShortName='d', Required = true)]
         public string RequiredField
         {
             get;

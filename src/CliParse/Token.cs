@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CliParse.Tokenize
+namespace CliParse
 {
     public enum TokenType : byte
     {

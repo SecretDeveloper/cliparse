@@ -1,10 +1,12 @@
-﻿using System.Linq;
-using CliParse.Tokenize;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using CliParse;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CliParse.Tests
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class TokenizerTests
     {
         [TestCategory("Tokenizer")]

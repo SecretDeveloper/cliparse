@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using CliParse.Tests.ParsableObjects;
@@ -7,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CliParse.Tests
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class InfoTests
     {
         [TestCategory("Information")]
@@ -23,37 +25,40 @@ Description:
     This assembly contains the unit tests for the cliparse library.    
 
 Syntax:
-    -a     
+    --a,     
         
         [Optional], Default:''
         
-    -b --Fieldb    
+    --Fieldb, -b    
         
         [Optional], Default:''
         -b 'this is an example usage'
-    -c --Fieldc    
+    --Fieldc, -c    
         
         [Optional], Default:'defaultValue'
         
-    -e --Flage    
+    --Flage, -e    
         
         [Optional], Default:''
         
-    -f --Fieldf    
+    --Fieldf, -f    
         
         [Optional], Default:'22'
         
-    -g --Fieldg    
+    --Fieldg, -g    
         This is a short description
         [Optional], Default:''
         
-    -h --Fieldh    
+    --Fieldh, -h    
         This is a long description This is a long description This is a 
         long description This is a long description This is a long description 
         This is a long description This is a long description This is a long 
         description This is a long description This is a long description This 
         is a long description This is a long description.
         [Optional], Default:''
+        
+
+Footer Content
 ";
 
             var actual = simple.GetHelpInfoFromAssembly(asm);
@@ -72,31 +77,31 @@ Description:
     This is a description.    
 
 Syntax:
-    -a     
+    --a,     
         
         [Optional], Default:''
         
-    -b --Fieldb    
+    --Fieldb, -b    
         
         [Optional], Default:''
         -b 'this is an example usage'
-    -c --Fieldc    
+    --Fieldc, -c    
         
         [Optional], Default:'defaultValue'
         
-    -e --Flage    
+    --Flage, -e    
         
         [Optional], Default:''
         
-    -f --Fieldf    
+    --Fieldf, -f    
         
         [Optional], Default:'22'
         
-    -g --Fieldg    
+    --Fieldg, -g    
         This is a short description
         [Optional], Default:''
         
-    -h --Fieldh    
+    --Fieldh, -h    
         This is a long description This is a long description This is a 
         long description This is a long description This is a long description 
         This is a long description This is a long description This is a long 
@@ -124,44 +129,44 @@ Description:
     Test Data Generation tool    
 
 Syntax:
-    -t --template    
+    --template, -t    
         The template containing 1 or more patterns to use when producing data.
         [Optional], Default:''
         
-    -p --pattern    
+    --pattern, -p    
         The pattern to use when producing data.
         [Optional], Default:''
         
-    -d --detailed    
+    --detailed, -d    
         Show help text for pattern symbols
         [Optional], Default:'False'
         
-    -i --inputfile    
+    --inputfile, -i    
         The path of the input file.
         [Optional], Default:''
         
-    -o --output    
+    --output, -o    
         The path of the output file.
         [Optional], Default:''
         
-    -c --count    
+    --count, -c    
         The number of items to produce.
         [Optional], Default:'1'
         
-    -s --seed    
+    --seed, -s    
         The seed value for random generation. Default is a random value.
         [Optional], Default:''
         
-    -v --verbose    
+    --verbose, -v    
         Verbose output including debug and performance information.
         [Optional], Default:'False'
         
-    -n --namedpatterns    
+    --namedpatterns, -n    
         A list of ';' seperated file paths containing named patterns to 
         be used in addition to default.tdg-patterns.
         [Optional], Default:''
         
-    -l --listnamedpatterns    
+    --listnamedpatterns, -l    
         Outputs a list of the named patterns from the 
         default.tdg-patterns file.
         [Optional], Default:'False'
@@ -202,8 +207,7 @@ a";
   aaaaa";
             actual = InfoBuilder.BreakStringToLength(input, lineLength);
             Assert.AreEqual(expected, actual);
-
-
+            
             input = "        required:N default:''\r";
             expected = "        required:N default:''\r";
             actual = InfoBuilder.BreakStringToLength(input, 80);
@@ -243,6 +247,71 @@ xbnouoeiuwaiad aio geiqpouicewysi";
 
             Assert.AreEqual(expected, actual);
 
+        }
+
+
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_handle_unspaced_text()
+        {
+            var lineLength = 80;
+
+            // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
+            var input = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
+
+            var expected = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowe
+zueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruah
+uudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeevi
+ioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdia
+qeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiow
+iueyauuoa";
+
+            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
+            Assert.AreEqual(expected, actual);
+            Console.WriteLine(actual);
+        }
+
+        [TestCategory("Negative")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void can_error_text_breaking()
+        {
+            var lineLength = -1;
+
+            // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
+            var input = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
+
+            var expected = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowe
+zueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruah
+uudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeevi
+ioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdia
+qeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiow
+iueyauuoa";
+
+            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
+            Assert.AreEqual(expected, actual);
+            Console.WriteLine(actual);
+        }
+
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_break_string_long_after_space()
+        {
+            var lineLength = 80;
+
+            // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
+            var input = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
+
+            var expected = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaow
+ezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohrua
+huudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeev
+iioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdi
+aqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauio
+wiueyauuoa";
+
+            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
+            Assert.AreEqual(expected, actual);
+            Console.WriteLine(actual);
         }
 
         [TestCategory("Information")]
