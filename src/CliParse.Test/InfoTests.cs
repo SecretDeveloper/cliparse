@@ -249,6 +249,26 @@ xbnouoeiuwaiad aio geiqpouicewysi";
 
         }
 
+        [TestCategory("Information")]
+        [TestMethod]
+        public void can_break_string_long_after_space()
+        {
+            var lineLength = 80;
+
+            // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
+            var input = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
+
+            var expected = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaow
+ezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohrua
+huudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeev
+iioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdi
+aqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauio
+wiueyauuoa";
+
+            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
+            Assert.AreEqual(expected, actual);
+            Console.WriteLine(actual);
+        }
 
         [TestCategory("Information")]
         [TestMethod]
@@ -287,27 +307,6 @@ uudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeevi
 ioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdia
 qeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiow
 iueyauuoa";
-
-            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
-            Console.WriteLine(actual);
-        }
-
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_break_string_long_after_space()
-        {
-            var lineLength = 80;
-
-            // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
-            var input = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
-
-            var expected = @"aoakhooowauaianoinbceo ehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaow
-ezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohrua
-huudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeev
-iioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdi
-aqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauio
-wiueyauuoa";
 
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
             Assert.AreEqual(expected, actual);

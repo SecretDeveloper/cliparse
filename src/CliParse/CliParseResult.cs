@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace CliParse
 {
@@ -26,10 +28,17 @@ namespace CliParse
             _messages.Add(message);
         }
 
-        public void AddMessageFromException(CliParseException exception)
+        public void AddMessageFromException(Exception exception)
         {
             Successful = false;
-            _messages.Add(string.Format("Exception of type '{0}' thrown.  - {1}", exception.GetType(), exception.Message));
+
+            if (exception == null)
+            {
+                _messages.Add("An unknown error has occured");
+                return;
+            }
+
+            _messages.Add(string.Format(CultureInfo.CurrentCulture, "Exception of type '{0}' thrown.  - {1}", exception.GetType(), exception.Message));
         }
     }
 }

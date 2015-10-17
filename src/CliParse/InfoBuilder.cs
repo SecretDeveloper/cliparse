@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,10 +9,13 @@ namespace CliParse
 {
     public static class InfoBuilder
     {
+        private const int _MaxLineLength = 80;
+
         public static string GetHelpInfoFromAssembly(Parsable parsable, Assembly asm, string template, string argumentTemplate, string argumentPrefix)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
             if(asm == null) throw new ArgumentNullException("asm");
+            if (string.IsNullOrEmpty(template)) return "";
 
             var title = GetAssemblyAttribute(asm, typeof (AssemblyTitleAttribute));
             template = template.Replace("{title}", title);
@@ -34,21 +38,22 @@ namespace CliParse
             var footer = GetAssemblyMetadataAttribute(asm, "footer");
             template = template.Replace("{footer}", footer);
 
-            return FormatTextForScreen(template.Trim(), 80);
+            return FormatTextForScreen(template.Trim(), _MaxLineLength);
         }
 
         public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, string argumentPrefix)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
+            if (string.IsNullOrEmpty(template)) return "";
 
-            var parsableClass = GetObjectAttribute(parsable, typeof(ParsableClass)) as ParsableClass;
+            var parsableClass = GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
             if(parsableClass == null)
-                throw new CliParseException("Unable to find [ParsableClass] attribute on provided object.");
+                throw new CliParseException("Unable to find 'ParsableClass' attribute on provided object.");
 
             template = template.Replace("{title}", parsableClass.Title);
             template = template.Replace("{description}", parsableClass.Description);
 
-            template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright)? "": string.Format("Copyright (C) {0}", parsableClass.Copyright));
+            template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright)? "": string.Format(CultureInfo.CurrentCulture,"Copyright (C) {0}", parsableClass.Copyright));
             template = template.Replace("{version}", parsableClass.Version);
 
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
@@ -57,7 +62,7 @@ namespace CliParse
             template = template.Replace("{example}", parsableClass.ExampleText);
             template = template.Replace("{footer}", parsableClass.FooterText);
 
-            return FormatTextForScreen(template.Trim(), 80);
+            return FormatTextForScreen(template.Trim(), _MaxLineLength);
         }
 
         private static object GetObjectAttribute(Parsable parsable, Type type)
@@ -79,15 +84,15 @@ namespace CliParse
             return sb.ToString();
         }
 
-        private static IEnumerable<ParsableArgument> GetListArgumentAttributes(Parsable parsable)
+        private static IEnumerable<ParsableArgumentAttribute> GetListArgumentAttributes(Parsable parsable)
         {
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
 
-            var arguments = new List<ParsableArgument>();
+            var arguments = new List<ParsableArgumentAttribute>();
             foreach (var prop in properties)
             {
-                arguments.AddRange(prop.GetCustomAttributes(true).OfType<ParsableArgument>());
+                arguments.AddRange(prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>());
             }
             return arguments;
         }

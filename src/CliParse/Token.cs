@@ -2,7 +2,7 @@
 
 namespace CliParse
 {
-    public enum TokenType : byte
+    public enum TokenType : int
     {
         Field,
         Value

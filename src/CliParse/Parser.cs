@@ -34,20 +34,20 @@ namespace CliParse
             var tokens = Tokenizer.Tokenize(args).ToList();
             result.ShowHelp = tokens.Any(IsHelpToken);
 
-            var discoveredArguments = new List<ParsableArgument>();
+            var discoveredArguments = new List<ParsableArgumentAttribute>();
 
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
             
             foreach (var prop in properties)
             {
-                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgument>())
+                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
                     discoveredArguments.Add(argument);
                     var token = GetTokenForArgument(tokens, argument);
                     var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
                     if(argument.Required && !propertySet)
-                        result.AddErrorMessage(string.Format("Required argument '{0}' was supplied.", argument.Name));
+                        result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture, "Required argument '{0}' was supplied.", argument.Name));
                 }
             }
             
@@ -64,7 +64,7 @@ namespace CliParse
                                             ((x.Name != null && x.Name.Equals(token.Value)) ||
                                              (x.ShortName.ToString(CultureInfo.InvariantCulture).Equals(token.Value))))))
                 {
-                    result.AddErrorMessage(string.Format("Unknown argument '{0}' was supplied.", token.Value));
+                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture, "Unknown argument '{0}' was supplied.", token.Value));
                 }
             }
 
@@ -78,7 +78,7 @@ namespace CliParse
                 || token.Value.ToString().IndexOf("?", StringComparison.OrdinalIgnoreCase) == 0);
         }
 
-        private static bool SetPropertyValue(Parsable parsable, Token token, IEnumerable<Token> tokens, ParsableArgument parsableArgument, PropertyInfo prop)
+        private static bool SetPropertyValue(Parsable parsable, Token token, IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument, PropertyInfo prop)
         {
             if (token == null)
             {
@@ -101,7 +101,7 @@ namespace CliParse
                     var tokenValue =
                         tokens.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
                     if (tokenValue == null)
-                        throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
+                        throw new CliParseException(string.Format(CultureInfo.CurrentCulture, "Missing value for ParsableArgument {0}", token.Value));
 
                     PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(parsable)[prop.Name];
                     prop.SetValue(parsable,
@@ -114,7 +114,7 @@ namespace CliParse
             if (token.Type == TokenType.Value)
             {
                 if (token.Value == null)
-                    throw new CliParseException(string.Format("Missing value for ParsableArgument {0}", token.Value));
+                    throw new CliParseException(string.Format(CultureInfo.CurrentCulture, "Missing value for ParsableArgument {0}", token.Value));
 
                 PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(parsable)[prop.Name];
                 prop.SetValue(parsable,
@@ -126,7 +126,7 @@ namespace CliParse
             return true;
         }
 
-        private static Token GetTokenForArgument(IEnumerable<Token> tokens, ParsableArgument parsableArgument)
+        private static Token GetTokenForArgument(IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument)
         {
             var shortName = parsableArgument.ShortName.ToString(CultureInfo.InvariantCulture);
             var longName = parsableArgument.Name;
