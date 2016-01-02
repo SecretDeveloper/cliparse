@@ -72,5 +72,20 @@
             get;
             set;
         }
+
+        public bool PreParseExecuted = false;
+        public bool PostParseExecuted = false;
+
+        public override void PreParse(System.Collections.Generic.IEnumerable<string> args, CliParseResult result)
+        {
+            base.PreParse(args, result);
+            PreParseExecuted = true;
+        }
+
+        public override void PostParse(System.Collections.Generic.IEnumerable<string> args, CliParseResult result)
+        {
+            base.PostParse(args, result);
+            PostParseExecuted = true;
+        }
     }
 }

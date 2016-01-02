@@ -17,8 +17,13 @@ namespace CliParse
             {
                 if (args == null) throw new CliParseException("Parameter 'args' cannot be null.");
                 if (parsable == null) throw new CliParseException("Parameter 'parsable' cannot be null.");
-                
-                result = MapArguments(parsable, args);
+
+                // single enumeration.
+                var argumentList = args as IList<string> ?? args.ToList();
+                parsable.PreParse(argumentList, result);
+                if (result.Successful == false || result.ShowHelp) return result;
+                result = MapArguments(parsable, argumentList);
+                parsable.PostParse(argumentList, result);
             }
             catch (CliParseException ex) 
             {

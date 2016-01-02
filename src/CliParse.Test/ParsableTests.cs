@@ -276,5 +276,40 @@ namespace CliParse.Tests
             Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
         }
+
+        [TestCategory("PrePost")]
+        [TestMethod]
+        public void can_execute_pre_and_post_methods()
+        {
+            var args = NativeMethods.CommandLineToArgs("-f 1");
+
+            var simple = new SimpleCli();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual(true, simple.PreParseExecuted);
+            Assert.AreEqual(true, simple.PostParseExecuted);
+        }
+
+        [TestCategory("ExampleParsing")]
+        [TestMethod]
+        public void can_parse_example_class()
+        {
+            var args = NativeMethods.CommandLineToArgs("stringValue");
+
+            var simple = new ExampleParsable();
+            var result = simple.CliParse(args);
+            
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("stringValue", simple.StringArgument);
+            Assert.AreEqual(false, simple.BoolArgument);
+
+            Console.Write(simple.GetHelpInfo());
+        }
     }
 }

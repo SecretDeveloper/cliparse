@@ -4,14 +4,40 @@ namespace CliParse
 {
     public class ParsableArgument : Attribute
     {
+        /// <summary>
+        /// Argument values supplied without a name can be determined by their position
+        /// </summary>
+        /// <example>
+        /// An argument named 'param1' with ImpliedPosition 0 can be provided as
+        /// "--param1 value" or "value"
+        /// </example>
         public int ImpliedPosition { get; set; }
-        public string Name { get; set; }
-        public char ShortName { get; set; }
-        public object DefaultValue { get; set; }
-        public string Description { get; set; }
-        public string Example { get; set; }
-        public bool Required { get; set; }
 
+        /// <summary>
+        /// The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The single character name of the argument, supplied in the commandline using a single prefix character e.g. -p value.
+        /// </summary>
+        public char ShortName { get; set; }
+        /// <summary>
+        /// The default value to use when the argument is not supplied. Cannot be used when 'Required' is true.
+        /// </summary>
+        public object DefaultValue { get; set; }
+        /// <summary>
+        /// Represents whether the argument must be supplied and returns a failure parse result if it was not found.
+        /// </summary>
+        public bool Required { get; set; }
+        /// <summary>
+        /// The description of what the argument represents.  This is used when building the argument help content.
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// The example instructions of how an argument can be supplied.  This is used when building the argument help content.
+        /// </summary>
+        public string Example { get; set; }
+        
         public const string DefaultPrefix = "-";
         public const string DefaultTemplate = @"    {name}, {shortname}    
         {description}
