@@ -19,12 +19,15 @@ using System.Runtime.InteropServices;
 // because it exposes externally visible types.	
 [assembly: CLSCompliant(true)]
 
+[assembly:InternalsVisibleTo("CliParse.Tests")]
+/*
 [assembly:InternalsVisibleTo("CliParse.Tests,PublicKey="+
 "00240000048000009400000006020000002400005253413100040000010001001f37d9a0aabf00"+
 "2d183bed4ab197c2bb0373f7e1f419a3b4438dcab284fea5d219ad3367a72b3673f1368f524e35"+
 "32e01837e2a27d8ca02927f85230968c48638f1c3889646b7a919c2de218db101e26289aaeb3a8"+
 "28828bd25ebd5877060e9af1e3e1641d680fea3fdbdec9a6ec3f9e709c94ad982151e86e8a9729"+
 "e0fa06a9")]
+*/
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -37,5 +40,5 @@ using System.Runtime.InteropServices;
 // The following Assembly Version items are managed by the build process.
 //[assembly: AssemblyVersion("0.0.0.0")]
 //[assembly: AssemblyFileVersion("0.0.0.0")]
-[assembly: AssemblyVersion("0.3.0")]
-[assembly: AssemblyFileVersion("0.3.0")]
+[assembly: AssemblyVersion("0.3.1")]
+[assembly: AssemblyFileVersion("0.3.1")]
