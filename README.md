@@ -94,12 +94,21 @@ Add CliParse metadata attributes to the class and properties.
 ###Step 3
 In your application call the `CliParse(args)` method on your class and provide it with the arguments your application received.  Your objects properties should now be populated with the correct values provided by the list of arguments.
 ```c#
-    var exampleParsable = new ExampleParsable();
-    var result = exampleParsable.CliParse(args);
-    if(!result.Successful || result.ShowHelp)
+public class Program
+{
+    private static void Main(string[] args)
     {
-        Console.WriteLine(exampleParsable.GetHelpInfo());  // Show help screen        
-        // exit
+        var exampleParsable = new ExampleParsable();
+        var result = exampleParsable.CliParse(args);
+        if(!result.Successful || result.ShowHelp)
+        {
+            // Show help screen
+            Console.WriteLine(exampleParsable.GetHelpInfo());         
+            // exit
+            return;
+        }
+
+        Console.WriteLine(exampleParsable.StringArgument);
     }
 ```
 
