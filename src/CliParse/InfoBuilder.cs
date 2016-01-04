@@ -173,7 +173,7 @@ namespace CliParse
             var keepGoing = true;
             while (keepGoing)
             {
-                var scanIndex = line.IndexOf(' ', possibleIndex+1);
+                var scanIndex = line.IndexOf(' ', possibleIndex);
                 if (scanIndex != -1) scanIndex += 1;  // move to location after the space so we wrap at start of word.
 
                 if (scanIndex - currentIndex + startingWhiteSpaceLength > maxLineLength)
