@@ -1,5 +1,9 @@
-﻿namespace CliParse.Tests.ParsableObjects
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+namespace CliParse.Tests.ParsableObjects
 {
+    [ExcludeFromCodeCoverage]
     [ParsableClass("Simple CLI Test Class", "This is a description.", FooterText = "This is the footer text.")]
     public class SimpleCli:Parsable
     {
@@ -71,6 +75,21 @@
         {
             get;
             set;
+        }
+
+        public bool PreParseExecuted = false;
+        public bool PostParseExecuted = false;
+
+        public override void PreParse(IEnumerable<string> args, CliParseResult result)
+        {
+            base.PreParse(args, result);
+            PreParseExecuted = true;
+        }
+
+        public override void PostParse(IEnumerable<string> args, CliParseResult result)
+        {
+            base.PostParse(args, result);
+            PostParseExecuted = true;
         }
     }
 }

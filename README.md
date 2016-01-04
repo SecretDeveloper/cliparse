@@ -10,26 +10,84 @@ A simple command line parsing library for .net which maps CLI arguments to prope
 ###Step 1
 Define a class that contains properties for each argument your application requires.  The class should inherit from `CliParse.Parsable`.
 
+```c#
+    public class ExampleParsable:Parsable
+    {
+        public string StringArgument
+        {
+            get;
+            set;
+        }
+
+        public bool BoolArgument
+        {
+            get;
+            set;
+        }
+
+        public string DefaultedArgument
+        {
+            get;
+            set;
+        }
+
+        public int IntArgument
+        {
+            get;
+            set;
+        }
+
+    }
+```
+
 ###Step 2
 Add CliParse metadata attributes to the class and properties.
 
 ```c#
-[ParsableClass("Simple CLI Test Class", "This is a description.", FooterText = "This is the footer text.")]
-    public class SimpleCli:Parsable
+[ParsableClass("Example CLI Parsable", "This is a description.", FooterText = "This is the footer text.")]
+    public class ExampleParsable:Parsable
     {
-        [ParsableArgument('a')]
-        public string Fielda
+        /// <summary>
+        /// Example required string argument.
+        /// It has an implied position 0 which means it can be supplied as the first unnamed parameter.
+        /// </summary>
+        [ParsableArgument("stringArgument", ShortName = 's', ImpliedPosition = 0, Required = true)]
+        public string StringArgument
         {
             get;
             set;
         }
 
-        [ParsableArgument('b', "Fieldb", Example = "-b 'this is an example usage'")]
-        public string Fieldb
+        /// <summary>
+        /// Example boolean argument
+        /// </summary>
+        [ParsableArgument("boolArgument", ShortName = 'b', Example = "-b 'this is an example usage'")]
+        public bool BoolArgument
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// Example defaulted argument
+        /// </summary>
+        [ParsableArgument("defaultedArgument", ShortName = 'd', DefaultValue = "defaultValue")]
+        public string DefaultedArgument
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Example Int argument with default value, description and example meta information.
+        /// </summary>
+        [ParsableArgument("intArgument", ShortName = 'i', DefaultValue = 43, Description = "Example description", Example = "use -i or --intArgument to supply values.")]
+        public int IntArgument
+        {
+            get;
+            set;
+        }
+
     }
 ```
 
@@ -64,22 +122,31 @@ Reads the properties from AssemblyInfo metadata of the provided Assembly to buil
 ```
 
 ####Example help screen
+The example parsable class used in the earlier example has a ```GetHelpInfo()``` method which will produce the following content:
 ```
-Simple CLI Test Class 
+Example CLI Parsable 
 
 Description:
     This is a description.    
 
 Syntax:
-    -a     
+    --stringArgument, -s    
         
-        [Optional], Default:''
+        Required, Default:''
         
-    -b --Fieldb    
+    --boolArgument, -b    
         
         [Optional], Default:''
         -b 'this is an example usage'
-           
+    --defaultedArgument, -d    
+        
+        [Optional], Default:'defaultValue'
+        
+    --intArgument, -i    
+        Example description
+        [Optional], Default:'43'
+        use -i or --intArgument to supply values.
+
 This is the footer text.
 ```
 
@@ -91,7 +158,7 @@ Get on with building the rest of your application.
 A property can be provided with the following ParsableArgument values:
 ```c#
 //...
-[ParsableArgument('a', "age", DefaultValue=0, Description"The persons age." Example = "-a 20 or --age 20", Required=false)]
+[ParsableArgument("age", ShortName='a', DefaultValue=0, Description"The persons age." Example = "-a 20 or --age 20", Required=false)]
 public int PersonAge{get;set;}
 //...
 ```
@@ -101,3 +168,25 @@ The longer name of the argument is age and can be used provided as `--age value`
 A default value can be supplied but only if the argument is not required.
 Description and Example are used to build the help screens.
 Required specifies that a value must be provided.
+
+#### Pre and Post
+By overriding the PreParse() and PostParse() methods you can execute custom code which will be executed before the parse result is returned.
+```c#
+/// <summary>
+        /// Executes before any parsing is performed.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        public virtual void PreParse(IEnumerable<string> args, CliParseResult result)
+        {
+        }
+
+        /// <summary>
+        /// Executes after parsing has been performed.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        public virtual void PostParse(IEnumerable<string> args, CliParseResult result)
+        {
+        }
+```

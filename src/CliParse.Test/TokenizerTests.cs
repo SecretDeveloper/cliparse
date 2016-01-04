@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using CliParse;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CliParse.Tests

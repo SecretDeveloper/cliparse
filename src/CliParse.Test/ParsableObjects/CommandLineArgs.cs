@@ -1,8 +1,8 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CliParse.Tests.ParsableObjects
 {
+    [ExcludeFromCodeCoverage]
     [ParsableClass("TDG", "Test Data Generation tool")]
     internal class CommandLineArgs : Parsable
     {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -53,7 +52,7 @@ namespace CliParse
             template = template.Replace("{title}", parsableClass.Title);
             template = template.Replace("{description}", parsableClass.Description);
 
-            template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright)? "": string.Format(CultureInfo.CurrentCulture,"Copyright (C) {0}", parsableClass.Copyright));
+            template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright) ? "" : parsableClass.Copyright);
             template = template.Replace("{version}", parsableClass.Version);
 
             var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);

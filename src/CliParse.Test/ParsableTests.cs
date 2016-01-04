@@ -10,6 +10,7 @@ namespace CliParse.Tests
     [ExcludeFromCodeCoverage]
     public class ParsableTests
     {
+        #region Parsing
         [TestCategory("Parsing")]
         [TestMethod]
         public void can_parse_single_arguments_by_long_name()
@@ -107,6 +108,19 @@ namespace CliParse.Tests
         {
             var args = NativeMethods.CommandLineToArgs("");
             var cli = new RequiredCli();
+            var result = cli.CliParse(args);
+
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_create_title_only_parsables_classes()
+        {
+            var args = NativeMethods.CommandLineToArgs("");
+            var cli = new NonDescriptionParsable();
             var result = cli.CliParse(args);
 
             Assert.AreEqual(false, result.Successful);
@@ -215,16 +229,56 @@ namespace CliParse.Tests
             Assert.AreEqual("c:\\Temp", simple.Path);
         }
 
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_non_named_parameters_which_match_parameter_name()
+        {
+            /*
+             Passing a value which matches a named parameter.
+             It should be interpreted as a value by its ImpliedPosition and not as the named parameter.
+            */
+            var args = NativeMethods.CommandLineToArgs("b");
+            var exampleParsable = new ExampleParsable();
+            var result = exampleParsable.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("b", exampleParsable.StringArgument);
+            Assert.AreEqual(false, exampleParsable.BoolArgument);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_non_named_parameters_which_match_parameter_name_longname()
+        {
+            /*
+             Passing a value which matches a named parameter.
+             It should be interpreted as a value by its ImpliedPosition and not as the named parameter.
+            */
+            var args = NativeMethods.CommandLineToArgs("boolArgument");
+            var exampleParsable = new ExampleParsable();
+            var result = exampleParsable.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("boolArgument", exampleParsable.StringArgument);
+            Assert.AreEqual(false, exampleParsable.BoolArgument);
+        }
+
+        #endregion
+
+        #region NegativeTesting
         [TestCategory("NegativeTesting")]
         [TestMethod]
+        [ExpectedException(typeof(CliParseException))]
         public void can_return_error_message_for_null_arguments()
         {
             var simple = new AnalysisOptions();
             var result = simple.CliParse(null);
-
-            Assert.AreEqual(false, result.Successful);
-            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
-            Assert.AreEqual(false, result.ShowHelp);
         }
 
         [TestCategory("NegativeTesting")]
@@ -275,6 +329,77 @@ namespace CliParse.Tests
             Assert.AreEqual(false, result.Successful);
             Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("NegativeTesting")]
+        [TestMethod]
+        [ExpectedException(typeof(CliParseException))]
+        public void can_error_when_parsable_is_null()
+        {
+            var args = NativeMethods.CommandLineToArgs("/a");
+
+            var simple = new SimpleCli();
+            simple = null;
+            simple.CliParse(args);
+        }
+
+        #endregion
+
+        [TestCategory("PrePost")]
+        [TestMethod]
+        public void can_execute_pre_and_post_methods()
+        {
+            var args = NativeMethods.CommandLineToArgs("-f 1");
+
+            var simple = new SimpleCli();
+            var result = simple.CliParse(args);
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual(true, simple.PreParseExecuted);
+            Assert.AreEqual(true, simple.PostParseExecuted);
+        }
+
+        [TestCategory("ExampleParsing")]
+        [TestMethod]
+        public void can_parse_example_class()
+        {
+            var args = NativeMethods.CommandLineToArgs("stringValue");
+
+            var simple = new ExampleParsable();
+            var result = simple.CliParse(args);
+            
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("stringValue", simple.StringArgument);
+            Assert.AreEqual(false, simple.BoolArgument);
+
+            Console.Write(simple.GetHelpInfo());
+        }
+
+        [TestCategory("codecoverage")]
+        [TestMethod]
+        public void can_add_null_string_to_result()
+        {
+            var result = new CliParseResult();
+            result.AddErrorMessage(null);
+
+            Assert.AreEqual(0, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.Successful);
+        }
+
+        [TestCategory("codecoverage")]
+        [TestMethod]
+        public void can_add_null_exception_to_result()
+        {
+            var result = new CliParseResult();
+            result.AddMessageFromException(null);
+
+            Assert.AreEqual(1, result.CliParseMessages.Count());
+            Assert.AreEqual(false, result.Successful);
         }
     }
 }

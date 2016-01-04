@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using CliParse;
 
 namespace CliParse
 {
@@ -12,13 +11,18 @@ namespace CliParse
     {
         public static CliParseResult Parse(Parsable parsable, IEnumerable<string> args)
         {
+            if (args == null) throw new CliParseException("Parameter 'args' cannot be null.");
+            if (parsable == null) throw new CliParseException("Parameter 'parsable' cannot be null.");
+
             var result = new CliParseResult();
             try
             {
-                if (args == null) throw new CliParseException("Parameter 'args' cannot be null.");
-                if (parsable == null) throw new CliParseException("Parameter 'parsable' cannot be null.");
-                
-                result = MapArguments(parsable, args);
+                // single enumeration.
+                var argumentList = args as IList<string> ?? args.ToList();
+                parsable.PreParse(argumentList, result);
+                if (result.Successful == false || result.ShowHelp) return result;
+                result = MapArguments(parsable, argumentList);
+                parsable.PostParse(argumentList, result);
             }
             catch (CliParseException ex) 
             {
@@ -136,8 +140,7 @@ namespace CliParse
             var token =
                 tokentsArray.FirstOrDefault(
                     x =>
-                        x.Value.Equals(shortName) || x.Value.Equals(longName) ||
-                        impliedPosition > -1 && x.Type == TokenType.Value && x.Index == impliedPosition);
+                        (x.Value.Equals(shortName) || x.Value.Equals(longName) || (impliedPosition > -1 && x.Index == impliedPosition)) && x.Type == TokenType.Field);
 
             // find by position instead.
             if (token == null)

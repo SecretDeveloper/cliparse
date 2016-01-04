@@ -25,7 +25,7 @@ namespace CliParse
         public void AddErrorMessage(string message)
         {
             Successful = false;
-            _messages.Add(message);
+            if(string.IsNullOrEmpty(message) == false) _messages.Add(message);
         }
 
         public void AddMessageFromException(Exception exception)
