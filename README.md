@@ -134,8 +134,10 @@ A `ParsableArgument` attribute which is applied to properties on your class obje
 An ImpliedPosition of 1 means the value can be supplied as the first parameter.
 An ImpliedPosition of -1 means the value can be supplied as the last parameter.
 The default value is 0 which means ImpliedPosition is not used.
-An argument named 'param1' with ImpliedPosition 0 can be provided as
+An argument named 'param1' with ImpliedPosition 1 can be provided as
 `--param1 value` or `value`.  
+An argument named 'param1' with ImpliedPosition -1 can be provided as
+`otherParam 'otherParamValue' --param1 value` or `otherParam 'otherParamValue' value`.  
 2. **Name** - The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.  
 3. **ShortName** - The single character name of the argument, supplied in the commandline using a single prefix character e.g. `-p value`.  
 4. **DefaultValue** - The default value to use when the argument is not supplied. Cannot be used when 'Required' is true.  

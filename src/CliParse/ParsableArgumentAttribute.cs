@@ -12,7 +12,7 @@ namespace CliParse
         /// The default value is 0 which means ImpliedPosition is not used.
         /// </summary>
         /// <example>
-        /// An argument named 'param1' with ImpliedPosition 0 can be provided as
+        /// An argument named 'param1' with ImpliedPosition 1 can be provided as
         /// "--param1 value" or "value"
         /// </example>
         public int ImpliedPosition { get; set; }
