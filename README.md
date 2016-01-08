@@ -119,7 +119,7 @@ Get on with building the rest of your application.
 ##Attributes
 
 ### Class level
-A ParsableClass attribute which is applied to your class object can be provided with the following properties:
+A ParsableClass attribute which is applied to your class object can be provided with the following properties:  
 1. Title - The Title that will be displayed on help screens.  
 2. Description - A description that will be displayed on help screens.  
 3. Version - The applications current version.  
@@ -129,15 +129,15 @@ A ParsableClass attribute which is applied to your class object can be provided 
 7. AllowedPrefixes - The allowed parameter prefix characters. Default is '-' and '/'.  
 
 ### Property level
-A ParsableArgument attribute which is applied to properties on your class object can be provided with the following properties:
+A ParsableArgument attribute which is applied to properties on your class object can be provided with the following properties:  
 1. ImpliedPosition - Argument values supplied without a name can be determined by their position.
 An ImpliedPosition of 1 means the value can be supplied as the first parameter.
 An ImpliedPosition of -1 means the value can be supplied as the last parameter.
 The default value is 0 which means ImpliedPosition is not used.
 An argument named 'param1' with ImpliedPosition 0 can be provided as
-"--param1 value" or "value".  
+`--param1 value` or `value`.  
 2. Name - The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.  
-3. ShortName - The single character name of the argument, supplied in the commandline using a single prefix character e.g. -p value.  
+3. ShortName - The single character name of the argument, supplied in the commandline using a single prefix character e.g. `-p value`.  
 4. DefaultValue - The default value to use when the argument is not supplied. Cannot be used when 'Required' is true.  
 5. Required - Represents whether the argument must be supplied and returns a failure parse result if it was not found.  
 6. Description - The description of what the argument represents.  This is used when building the argument help content.  
