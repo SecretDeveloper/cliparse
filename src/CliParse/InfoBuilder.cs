@@ -45,7 +45,7 @@ namespace CliParse
             if (parsable == null) throw new ArgumentNullException("parsable");
             if (string.IsNullOrEmpty(template)) return "";
 
-            var parsableClass = GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
+            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
             if(parsableClass == null)
                 throw new CliParseException("Unable to find 'ParsableClass' attribute on provided object.");
 
@@ -62,12 +62,6 @@ namespace CliParse
             template = template.Replace("{footer}", parsableClass.FooterText);
 
             return FormatTextForScreen(template.Trim(), _MaxLineLength);
-        }
-
-        private static object GetObjectAttribute(Parsable parsable, Type type)
-        {
-            var parsableType = parsable.GetType();
-            return parsableType.GetCustomAttributes(true).FirstOrDefault(x => x.GetType() == type);
         }
 
         private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)

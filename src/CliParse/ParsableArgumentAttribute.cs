@@ -7,6 +7,9 @@ namespace CliParse
     {
         /// <summary>
         /// Argument values supplied without a name can be determined by their position
+        /// An ImpliedPosition of 1 means the value can be supplied as the first parameter.
+        /// An ImpliedPosition of -1 means the value can be supplied as the last parameter.
+        /// The default value is 0 which means ImpliedPosition is not used.
         /// </summary>
         /// <example>
         /// An argument named 'param1' with ImpliedPosition 0 can be provided as
@@ -52,7 +55,7 @@ namespace CliParse
 
        public ParsableArgumentAttribute(string name)
        {
-           ImpliedPosition = -1;
+           ImpliedPosition = 0; 
            Name = name;
         }
 

@@ -172,7 +172,7 @@ public int PersonAge{get;set;}
 //...
 ```
 
-In this example 'a' is the properties shortname and can be provided in an argument as `-a value`.  
+In this example 'a' is the properties shortname and can be provided in an argument as `-a value`.  Multiple shortname values can be provided in a single command e.g. `-am "message"`.
 The longer name of the argument is age and can be used provided as `--age value`.
 A default value can be supplied but only if the argument is not required.
 Description and Example are used to build the help screens.

@@ -15,7 +15,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void can_parse_single_arguments_by_long_name()
         {
-            var args = NativeMethods.CommandLineToArgs("/Fieldb testname");
+            var args = NativeMethods.CommandLineToArgs("//Fieldb testname");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
@@ -30,7 +30,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void can_parse_single_arguments_by_short_name()
         {
-            var args = NativeMethods.CommandLineToArgs("/a testname");
+            var args = NativeMethods.CommandLineToArgs("/x testname");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
@@ -38,7 +38,7 @@ namespace CliParse.Tests
             Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
 
-            Assert.AreEqual("testname", simple.Fielda);
+            Assert.AreEqual("testname", simple.FieldX);
         }
 
         [TestCategory("Parsing")]
@@ -145,7 +145,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void can_handle_help_arguments()
         {
-            var args = NativeMethods.CommandLineToArgs("/help");
+            var args = NativeMethods.CommandLineToArgs("//help");
             var simple = new SimpleCli();
             var result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
@@ -180,7 +180,7 @@ namespace CliParse.Tests
             Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(true, result.ShowHelp);
 
-            args = NativeMethods.CommandLineToArgs("-help");
+            args = NativeMethods.CommandLineToArgs("--help");
             simple = new SimpleCli();
             result = simple.CliParse(args);
             Assert.AreEqual(true, result.Successful);
@@ -269,6 +269,82 @@ namespace CliParse.Tests
             Assert.AreEqual(false, exampleParsable.BoolArgument);
         }
 
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_named_parameter_with_impliedPosition_by_name()
+        {
+            // Issue #1
+            var args = NativeMethods.CommandLineToArgs("-d myDefault -s myString -b");
+            var exampleParsable = new ExampleParsable();
+            var result = exampleParsable.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("myDefault", exampleParsable.DefaultedArgument);
+            Assert.AreEqual("myString", exampleParsable.StringArgument);
+            Assert.AreEqual(true, exampleParsable.BoolArgument);
+            Assert.AreEqual(43, exampleParsable.IntArgument);
+        }
+        
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_bool_parameter_with_supplied_value()
+        {
+            // Issue #1
+            var args = NativeMethods.CommandLineToArgs("myString -b false");
+            var exampleParsable = new ExampleParsable();
+            var result = exampleParsable.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual(false, exampleParsable.BoolArgument);
+            Assert.AreEqual("myString", exampleParsable.StringArgument);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_multiple_shortname_paramaters_provided_together()
+        {
+            // Issue #1
+            var args = NativeMethods.CommandLineToArgs("-aAdDv");
+            var simpleCli = new SimpleCli();
+            var result = simpleCli.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual(true, simpleCli.Add);
+            Assert.AreEqual(true, simpleCli.All);
+            Assert.AreEqual(true, simpleCli.Delete);
+            Assert.AreEqual(true, simpleCli.Detailed);
+            Assert.AreEqual(true, simpleCli.Verbose);
+        }
+
+
+        [TestCategory("Issues")]
+        [TestMethod]
+        public void can_map_named_parameter_with_impliedPosition_out_of_order()
+        {
+            // Issue #1
+            var args = NativeMethods.CommandLineToArgs("-d nonDefault -s myString");
+            var exampleParsable = new ExampleParsable();
+            var result = exampleParsable.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
+            Assert.AreEqual("nonDefault", exampleParsable.DefaultedArgument);
+            Assert.AreEqual("myString", exampleParsable.StringArgument);
+            Assert.AreEqual(false, exampleParsable.BoolArgument);
+            Assert.AreEqual(43, exampleParsable.IntArgument);
+        }
+
         #endregion
 
         #region NegativeTesting
@@ -322,7 +398,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void can_error_missing_values()
         {
-            var args = NativeMethods.CommandLineToArgs("/a");
+            var args = NativeMethods.CommandLineToArgs("/x");
 
             var simple = new SimpleCli();
             var result = simple.CliParse(args);

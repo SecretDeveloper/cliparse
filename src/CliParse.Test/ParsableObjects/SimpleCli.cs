@@ -10,8 +10,8 @@ namespace CliParse.Tests.ParsableObjects
         /// <summary>
         /// 'a'
         /// </summary>
-        [ParsableArgument("a")]
-        public string Fielda
+        [ParsableArgument("x")]
+        public string FieldX
         {
             get;
             set;
@@ -57,21 +57,36 @@ namespace CliParse.Tests.ParsableObjects
             set;
         }
 
-        /// <summary>
-        /// 'g' Flag4
-        /// </summary>
-        [ParsableArgument("Fieldg", ShortName = 'g', Description = "This is a short description")]
-        public int Fieldg
+        [ParsableArgument("verbose", ShortName = 'v')]
+        public bool Verbose
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 'h' Flag5
-        /// </summary>
-        [ParsableArgument("Fieldh", ShortName = 'h', Description = "This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description This is a long description.")]
-        public int Fieldh
+        [ParsableArgument("add", ShortName = 'a')]
+        public bool Add
+        {
+            get;
+            set;
+        }
+
+        [ParsableArgument("all", ShortName = 'A')]
+        public bool All
+        {
+            get;
+            set;
+        }
+
+        [ParsableArgument("delete", ShortName = 'd')]
+        public bool Delete
+        {
+            get;
+            set;
+        }
+
+        [ParsableArgument("detailed", ShortName = 'D')]
+        public bool Detailed
         {
             get;
             set;

@@ -3,7 +3,7 @@
     [ParsableClass("locr", "Utility for counting the number of lines conained in a file or directory of files.")]
     public class AnalysisOptions:Parsable
     {
-        [ParsableArgument("path", ShortName = 'p', ImpliedPosition = 0, Required = true)]
+        [ParsableArgument("path", ShortName = 'p', ImpliedPosition = 1, Required = true)]
         public string Path { get; set; }
 
         [ParsableArgument("match", ShortName = 'm', Description = "Only files matched by the supplied regular expression will be scanned")]

@@ -16,7 +16,7 @@ namespace CliParse.Tests
             var tokens = Tokenizer.Tokenize(args);
 
             Assert.AreEqual(1, tokens.Count());
-            Assert.AreEqual(tokens.FirstOrDefault().Index, 0);
+            Assert.AreEqual(tokens.FirstOrDefault().Index, 1);
             Assert.AreEqual(tokens.FirstOrDefault().Value, "a");
             Assert.AreEqual(tokens.FirstOrDefault().Type, TokenType.Field);
 
@@ -24,7 +24,7 @@ namespace CliParse.Tests
             tokens = Tokenizer.Tokenize(args);
 
             Assert.AreEqual(1, tokens.Count());
-            Assert.AreEqual(tokens.FirstOrDefault().Index, 0);
+            Assert.AreEqual(tokens.FirstOrDefault().Index, 1);
             Assert.AreEqual(tokens.FirstOrDefault().Value, "a");
             Assert.AreEqual(tokens.FirstOrDefault().Type, TokenType.Field);
         }
@@ -38,11 +38,11 @@ namespace CliParse.Tests
 
             Assert.AreEqual(2, tokens.Count());
 
-            Assert.AreEqual(0, tokens[0].Index);
+            Assert.AreEqual(1, tokens[0].Index);
             Assert.AreEqual("a", tokens[0].Value);
             Assert.AreEqual(TokenType.Field, tokens[0].Type);
             
-            Assert.AreEqual(1, tokens[1].Index);
+            Assert.AreEqual(2, tokens[1].Index);
             Assert.AreEqual("myvalue", tokens[1].Value);
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
         }
@@ -56,11 +56,11 @@ namespace CliParse.Tests
 
             Assert.AreEqual(2, tokens.Count());
 
-            Assert.AreEqual(0, tokens[0].Index);
+            Assert.AreEqual(1, tokens[0].Index);
             Assert.AreEqual("a", tokens[0].Value);
             Assert.AreEqual(TokenType.Field, tokens[0].Type);
 
-            Assert.AreEqual(1, tokens[1].Index);
+            Assert.AreEqual(2, tokens[1].Index);
             Assert.AreEqual("this is a quoted value", tokens[1].Value);
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
         }
@@ -74,11 +74,11 @@ namespace CliParse.Tests
 
             Assert.AreEqual(2, tokens.Count());
 
-            Assert.AreEqual(0, tokens[0].Index);
+            Assert.AreEqual(1, tokens[0].Index);
             Assert.AreEqual("a", tokens[0].Value);
             Assert.AreEqual(TokenType.Field, tokens[0].Type);
 
-            Assert.AreEqual(1, tokens[1].Index);
+            Assert.AreEqual(2, tokens[1].Index);
             Assert.AreEqual("http://google.com?q=asdf-gg", tokens[1].Value);
             Assert.AreEqual(TokenType.Value, tokens[1].Type);
 

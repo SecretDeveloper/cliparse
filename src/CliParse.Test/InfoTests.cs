@@ -25,7 +25,7 @@ Description:
     This assembly contains the unit tests for the cliparse library.    
 
 Syntax:
-    --a,     
+    --x,     
         
         [Optional], Default:''
         
@@ -45,16 +45,24 @@ Syntax:
         
         [Optional], Default:'22'
         
-    --Fieldg, -g    
-        This is a short description
+    --verbose, -v    
+        
         [Optional], Default:''
         
-    --Fieldh, -h    
-        This is a long description This is a long description This is a 
-        long description This is a long description This is a long description 
-        This is a long description This is a long description This is a long 
-        description This is a long description This is a long description This 
-        is a long description This is a long description.
+    --add, -a    
+        
+        [Optional], Default:''
+        
+    --all, -A    
+        
+        [Optional], Default:''
+        
+    --delete, -d    
+        
+        [Optional], Default:''
+        
+    --detailed, -D    
+        
         [Optional], Default:''
         
 
@@ -77,7 +85,7 @@ Description:
     This is a description.    
 
 Syntax:
-    --a,     
+    --x,     
         
         [Optional], Default:''
         
@@ -97,16 +105,24 @@ Syntax:
         
         [Optional], Default:'22'
         
-    --Fieldg, -g    
-        This is a short description
+    --verbose, -v    
+        
         [Optional], Default:''
         
-    --Fieldh, -h    
-        This is a long description This is a long description This is a 
-        long description This is a long description This is a long description 
-        This is a long description This is a long description This is a long 
-        description This is a long description This is a long description This 
-        is a long description This is a long description.
+    --add, -a    
+        
+        [Optional], Default:''
+        
+    --all, -A    
+        
+        [Optional], Default:''
+        
+    --delete, -d    
+        
+        [Optional], Default:''
+        
+    --detailed, -D    
+        
         [Optional], Default:''
         
 

@@ -35,23 +35,55 @@ namespace CliParse
         {
             var result = new CliParseResult();
 
-            var tokens = Tokenizer.Tokenize(args).ToList();
+            var allowedPrefixes = GetParsableClassAllowedPrefixs(parsable);
+
+            var tokens = Tokenizer.Tokenize(args, allowedPrefixes).ToList();
             result.ShowHelp = tokens.Any(IsHelpToken);
 
             var discoveredArguments = new List<ParsableArgumentAttribute>();
 
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
+            List<PropertyInfo> propertiesToFindByPosition = new List<PropertyInfo>();
+            List<PropertyInfo> requiredProperties = new List<PropertyInfo>();
             
+            // find by names
             foreach (var prop in properties)
             {
                 foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
                     discoveredArguments.Add(argument);
-                    var token = GetTokenForArgument(tokens, argument);
+                    var token = GetTokenForArgumentByName(tokens, argument);
                     var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
-                    if(argument.Required && !propertySet)
-                        result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture, "Required argument '{0}' was supplied.", argument.Name));
+
+                    if (!propertySet && token == null)
+                    {
+                        propertiesToFindByPosition.Add(prop);
+                    }
+                }
+            }
+
+            // find by positions
+            foreach (var prop in propertiesToFindByPosition)
+            {
+                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
+                {
+                    var token = GetTokenForArgumentByPosition(tokens, argument);
+                    var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
+                    
+                    if (!propertySet && argument.Required)
+                        requiredProperties.Add(prop);
+
+                    if (propertySet)
+                        requiredProperties.Remove(prop);
+                }
+            }
+
+            foreach (var requiredProperty in requiredProperties)
+            {
+                foreach (var argument in requiredProperty.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
+                {
+                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was supplied.", argument.Name));
                 }
             }
             
@@ -75,6 +107,13 @@ namespace CliParse
             return result;
         }
 
+        private static char[] GetParsableClassAllowedPrefixs(Parsable parsable)
+        {
+            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
+            if (parsableClass == null) return null;
+            return parsableClass.AllowedPrefixes;
+        }
+
         private static bool IsHelpToken(Token token)
         {
             return token.Type == TokenType.Field && (
@@ -94,16 +133,28 @@ namespace CliParse
                 return false;    // couldnt find matching token, return false.
             }
 
+            Token tokenValue = null;
             if(token.Type == TokenType.Field)
             {
                 if (prop.PropertyType == typeof (bool))
                 {
-                    prop.SetValue(parsable, true); // set property to true if flag was provided.
+                    // check if we have been provided a "true" or "false" value.
+                    tokenValue =
+                        tokens.FirstOrDefault(x => !x.Taken && x.Index == token.Index + 1 && x.Type == TokenType.Value);
+
+                    var optionValue = true;
+                    if (tokenValue != null && !Boolean.TryParse(tokenValue.Value.ToString(), out optionValue))
+                    {
+                        // tokenValue did not contain a valid bool so do not use its value, set it back to null so it will not be flagged as Taken.
+                        tokenValue = null;
+                        optionValue = true;
+                    }
+                    prop.SetValue(parsable, optionValue); // set property to true if flag was provided.
                 }
                 else
                 {
-                    var tokenValue =
-                        tokens.FirstOrDefault(x => x.Index == token.Index + 1 && x.Type == TokenType.Value);
+                    tokenValue =
+                        tokens.FirstOrDefault(x => !x.Taken && x.Index == token.Index + 1 && x.Type == TokenType.Value);
                     if (tokenValue == null)
                         throw new CliParseException(string.Format(CultureInfo.CurrentCulture, "Missing value for ParsableArgument {0}", token.Value));
 
@@ -127,24 +178,50 @@ namespace CliParse
                         : token.Value);
             }
 
+            token.Taken = true;
+            if (tokenValue != null) tokenValue.Taken = true;
+
             return true;
         }
 
-        private static Token GetTokenForArgument(IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument)
+        private static Token GetTokenForArgumentByName(ICollection<Token> tokens, ParsableArgumentAttribute parsableArgument)
         {
             var shortName = parsableArgument.ShortName.ToString(CultureInfo.InvariantCulture);
             var longName = parsableArgument.Name;
+
+            var tokensArray = tokens as Token[] ?? tokens.ToArray();
+
+            // Match by name. 
+            // shortnames are case sensitive
+            // long names are not
+            var token =
+                tokensArray.FirstOrDefault( x =>
+                        !x.Taken && x.Type == TokenType.Field && (x.Value.ToString().Equals(shortName, StringComparison.InvariantCulture) 
+                        || x.Value.ToString().Equals(longName, StringComparison.InvariantCultureIgnoreCase)));
+
+            return token;
+        }
+
+        private static Token GetTokenForArgumentByPosition(ICollection<Token> tokens, ParsableArgumentAttribute parsableArgument)
+        {
             var impliedPosition = parsableArgument.ImpliedPosition;
 
-            var tokentsArray = tokens as Token[] ?? tokens.ToArray();
-            var token =
-                tokentsArray.FirstOrDefault(
-                    x =>
-                        (x.Value.Equals(shortName) || x.Value.Equals(longName) || (impliedPosition > -1 && x.Index == impliedPosition)) && x.Type == TokenType.Field);
+            var tokensArray = tokens as Token[] ?? tokens.ToArray();
+            Token token = null;
 
-            // find by position instead.
-            if (token == null)
-                token = tokentsArray.FirstOrDefault(x => x.Type == TokenType.Value && x.Index == impliedPosition);
+            // match by position - postives
+            if (impliedPosition > 0)
+            {
+                token = tokensArray.FirstOrDefault(x =>
+                    !x.Taken && x.Type == TokenType.Value && x.Index == impliedPosition);
+            }
+            else
+            {
+                // match by position - negatives
+                token = tokensArray.FirstOrDefault(x =>
+                    !x.Taken && x.Type == TokenType.Value && (x.Index - tokens.Count - 1) == impliedPosition);
+            }
+
 
             return token;
         }

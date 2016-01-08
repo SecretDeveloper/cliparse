@@ -7,7 +7,7 @@
         /// Example required string argument.
         /// It has an implied position 0 which means it can be supplied as the first unnamed parameter.
         /// </summary>
-        [ParsableArgument("stringArgument", ShortName = 's', ImpliedPosition = 0, Required = true)]
+        [ParsableArgument("stringArgument", ShortName = 's', ImpliedPosition = 1, Required = true)]
         public string StringArgument
         {
             get;
