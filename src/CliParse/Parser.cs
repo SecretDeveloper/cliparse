@@ -35,10 +35,15 @@ namespace CliParse
         {
             var result = new CliParseResult();
 
-            var allowedPrefixes = GetParsableClassAllowedPrefixs(parsable);
+            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
+            var allowedPrefixes = GetParsableClassAllowedPrefixs(parsableClass);
 
             var tokens = Tokenizer.Tokenize(args, allowedPrefixes).ToList();
-            result.ShowHelp = tokens.Any(IsHelpToken);
+            result.ShowHelp = tokens.Any(token=>IsHelpToken(token, parsable));
+            if (tokens.Count == 0)
+            {
+                if (parsableClass == null || parsableClass.ShowHelpWhenNoArgumentsProvided) result.ShowHelp = true;
+            }
 
             var discoveredArguments = new List<ParsableArgumentAttribute>();
 
@@ -83,42 +88,52 @@ namespace CliParse
             {
                 foreach (var argument in requiredProperty.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
-                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was supplied.", argument.Name));
+                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was not supplied.", argument.Name));
                 }
             }
-            
-            // unknown aruments
-            if (result.ShowHelp == false)
+
+            // unknown/unused aruments
+            if (!result.ShowHelp)
             {
-                foreach (
-                    var token in
-                        tokens.Where(token => token.Type == TokenType.Field)
-                            .Where(
-                                token =>
-                                    !discoveredArguments.Any(
-                                        x =>
-                                            ((x.Name != null && x.Name.Equals(token.Value)) ||
-                                             (x.ShortName.ToString(CultureInfo.InvariantCulture).Equals(token.Value))))))
-                {
-                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture, "Unknown argument '{0}' was supplied.", token.Value));
-                }
+                tokens.Where(x => !x.Taken)
+                    .ToList()
+                    .ForEach(
+                        x =>
+                            result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,
+                                "Unknown argument '{0}' was supplied.", x.Value.ToString())));
             }
+
+            //if (result.ShowHelp == false)
+            //{
+            //    foreach (var token in tokens.Where(x => x.Type == TokenType.Field))
+            //    {
+            //        foreach (var discoveredArg in discoveredArguments)
+            //        {
+            //            if (discoveredArg.Name.Equals(token.Value.ToString(), StringComparison.InvariantCultureIgnoreCase) 
+            //                || discoveredArg.ShortName.ToString().Equals(token.Value.ToString(), StringComparison.InvariantCulture))
+            //            {
+            //                result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,
+            //                    "Unknown argument '{0}' was supplied.", token.Value));
+            //            }
+            //        }
+            //    }
+            //}
 
             return result;
         }
 
-        private static char[] GetParsableClassAllowedPrefixs(Parsable parsable)
+        private static char[] GetParsableClassAllowedPrefixs(ParsableClassAttribute parsableClass)
         {
-            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
             if (parsableClass == null) return null;
             return parsableClass.AllowedPrefixes;
         }
 
-        private static bool IsHelpToken(Token token)
+        private static bool IsHelpToken(Token token, Parsable parsable)
         {
-            return token.Type == TokenType.Field && (
-                token.Value.ToString().IndexOf("help", StringComparison.OrdinalIgnoreCase) == 0
-                || token.Value.ToString().IndexOf("?", StringComparison.OrdinalIgnoreCase) == 0);
+            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute ?? new ParsableClassAttribute("");
+            var defaultHelpArgs = parsableClass.ShowHelpParameters;
+            
+            return token.Type == TokenType.Field && defaultHelpArgs.Contains(token.Value.ToString());
         }
 
         private static bool SetPropertyValue(Parsable parsable, Token token, IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument, PropertyInfo prop)
@@ -168,9 +183,6 @@ namespace CliParse
             
             if (token.Type == TokenType.Value)
             {
-                if (token.Value == null)
-                    throw new CliParseException(string.Format(CultureInfo.CurrentCulture, "Missing value for ParsableArgument {0}", token.Value));
-
                 PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(parsable)[prop.Name];
                 prop.SetValue(parsable,
                     propertyDescriptor.Converter != null

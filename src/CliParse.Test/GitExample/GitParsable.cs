@@ -56,7 +56,7 @@ namespace CliParse.Tests.GitExample
         public bool CreateBranch { get; set; }
 
         [ParsableArgument("delete", ShortName = 'd')]
-        public bool DeleteFlag { get; set; }
+        public bool DeleteFlag { get; set; }    
 
         [ParsableArgument("all", ShortName = 'A')]
         public bool AllFlag { get; set; }

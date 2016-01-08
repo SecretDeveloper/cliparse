@@ -112,7 +112,7 @@ namespace CliParse.Tests
 
             Assert.AreEqual(false, result.Successful);
             Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
-            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual(true, result.ShowHelp);
         }
 
         [TestCategory("Parsing")]
@@ -125,7 +125,7 @@ namespace CliParse.Tests
 
             Assert.AreEqual(false, result.Successful);
             Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
-            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual(true, result.ShowHelp);
         }
 
         [TestCategory("Parsing")]
@@ -197,7 +197,20 @@ namespace CliParse.Tests
             var result = simple.CliParse(args);
 
             Assert.AreEqual(false, result.Successful);
-            Assert.AreEqual(2, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(3, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void sets_showhelp_to_false_when_no_arguments_supplied_and_showhelpwhennoargumentsprovided_is_false()
+        {
+            var args = NativeMethods.CommandLineToArgs("");
+            var analysisOptions = new AnalysisOptions();
+            var result = analysisOptions.CliParse(args);
+
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
         }
 
@@ -227,6 +240,21 @@ namespace CliParse.Tests
             Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
             Assert.AreEqual(false, result.ShowHelp);
             Assert.AreEqual("c:\\Temp", simple.Path);
+        }
+
+
+        [TestCategory("Parsing")]
+        [TestMethod]
+        public void can_map_multiple_argument_by_implied_position()
+        {
+            var args = NativeMethods.CommandLineToArgs("blah 123 123");
+            var simple = new AnalysisOptions();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(false, result.Successful);
+            Assert.AreEqual(1, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+
         }
 
         [TestCategory("Parsing")]

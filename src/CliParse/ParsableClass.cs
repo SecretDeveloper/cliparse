@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CliParse
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public sealed class ParsableClassAttribute : Attribute
     {
         /// <summary>
@@ -33,6 +34,15 @@ namespace CliParse
         /// The allowed parameter prefix characters. Default is '-' and '/'.
         /// </summary>
         public char[] AllowedPrefixes { get; set; }
+        /// <summary>
+        /// A list of the parameter values which will set ShowHelp to true if they are provided. Default is "help" and '?'.
+        /// </summary>
+        public IEnumerable<string> ShowHelpParameters { get; set; }
+        /// <summary>
+        /// Determines whether ShowHelp is set to true when no arguments are provided.
+        /// Default is true.
+        /// </summary>
+        public bool ShowHelpWhenNoArgumentsProvided { get; set; }
 
         public ParsableClassAttribute(string title)
         {
@@ -50,7 +60,9 @@ namespace CliParse
         private void reset()
         {
             Description = "";
-            AllowedPrefixes = new char[] {'-', '/'};
+            AllowedPrefixes = new[] {'-', '/'};
+            ShowHelpParameters = new List<string>() {"?", "help"};
+            ShowHelpWhenNoArgumentsProvided = true;
         }
     }
 }

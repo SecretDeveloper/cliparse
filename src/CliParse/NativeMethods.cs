@@ -18,6 +18,8 @@ namespace CliParse
         /// <returns></returns>
         public static string[] CommandLineToArgs(string commandLine)
         {
+            if (string.IsNullOrEmpty(commandLine)) return new string[0];
+
             int argc;
             var argv = CommandLineToArgvW(commandLine, out argc);
             if (argv == IntPtr.Zero)
