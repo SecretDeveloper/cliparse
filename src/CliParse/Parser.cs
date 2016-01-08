@@ -9,6 +9,12 @@ namespace CliParse
 {
     public static class Parser
     {
+        /// <summary>
+        /// Parses the provided args collection and uses its values to set the appropriate properties on the parsable object.
+        /// </summary>
+        /// <param name="parsable"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static CliParseResult Parse(Parsable parsable, IEnumerable<string> args)
         {
             if (args == null) throw new CliParseException("Parameter 'args' cannot be null.");
@@ -122,7 +128,7 @@ namespace CliParse
             return result;
         }
 
-        private static char[] GetParsableClassAllowedPrefixs(ParsableClassAttribute parsableClass)
+        private static ICollection<char> GetParsableClassAllowedPrefixs(ParsableClassAttribute parsableClass)
         {
             if (parsableClass == null) return null;
             return parsableClass.AllowedPrefixes;
@@ -208,8 +214,8 @@ namespace CliParse
             // long names are not
             var token =
                 tokensArray.FirstOrDefault( x =>
-                        !x.Taken && x.Type == TokenType.Field && (x.Value.ToString().Equals(shortName, StringComparison.InvariantCulture) 
-                        || x.Value.ToString().Equals(longName, StringComparison.InvariantCultureIgnoreCase)));
+                        !x.Taken && x.Type == TokenType.Field && (x.Value.ToString().Equals(shortName, StringComparison.Ordinal) 
+                        || x.Value.ToString().Equals(longName, StringComparison.OrdinalIgnoreCase)));
 
             return token;
         }

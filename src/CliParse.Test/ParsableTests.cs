@@ -218,7 +218,7 @@ namespace CliParse.Tests
         [TestMethod]
         public void specific_issue_1()
         {
-            var args = NativeMethods.CommandLineToArgs("-p c:\\Temp");
+            var args = NativeMethods.CommandLineToArgs("/p c:\\Temp");
             var simple = new AnalysisOptions();
             var result = simple.CliParse(args);
 

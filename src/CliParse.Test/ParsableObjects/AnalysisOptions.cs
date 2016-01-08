@@ -1,6 +1,6 @@
 ﻿namespace CliParse.Tests.ParsableObjects
 {
-    [ParsableClass("locr", "Utility for counting the number of lines conained in a file or directory of files.", ShowHelpWhenNoArgumentsProvided = false)]
+    [ParsableClass("locr", "Utility for counting the number of lines conained in a file or directory of files.", ShowHelpWhenNoArgumentsProvided = false, AllowedPrefixes = new []{'/'})]
     public class AnalysisOptions:Parsable
     {
         [ParsableArgument("path", ShortName = 'p', ImpliedPosition = 1, Required = true)]

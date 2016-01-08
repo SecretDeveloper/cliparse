@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,15 +7,29 @@ using System.Text;
 
 namespace CliParse
 {
+    /// <summary>
+    /// Information content builder for help screens.
+    /// </summary>
     public static class InfoBuilder
     {
-        private const int _MaxLineLength = 80;
-
-        public static string GetHelpInfoFromAssembly(Parsable parsable, Assembly asm, string template, string argumentTemplate, string argumentPrefix)
+        /// <summary>
+        /// Returns help content derived from the provided assembly and parsable object.
+        /// </summary>
+        /// <param name="parsable"></param>
+        /// <param name="asm"></param>
+        /// <param name="template"></param>
+        /// <param name="argumentTemplate"></param>
+        /// <param name="maxLineLength">The maximum number of characters in a line before it is wrapped</param>
+        /// <returns></returns>
+        public static string GetHelpInfoFromAssembly(Parsable parsable, Assembly asm, string template, string argumentTemplate, int maxLineLength = 80)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
             if(asm == null) throw new ArgumentNullException("asm");
             if (string.IsNullOrEmpty(template)) return "";
+
+            var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
+            if (parsableClass == null)
+                throw new CliParseException("Unable to find 'ParsableClass' attribute on provided object.");
 
             var title = GetAssemblyAttribute(asm, typeof (AssemblyTitleAttribute));
             template = template.Replace("{title}", title);
@@ -27,8 +42,8 @@ namespace CliParse
 
             var description = GetAssemblyAttribute(asm, typeof (AssemblyDescriptionAttribute));
             template = template.Replace("{description}", description);
-            
-            var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
+
+            var syntax = GetSyntaxInfo(parsable, argumentTemplate, parsableClass.AllowedPrefixes);
             template = template.Replace("{syntax}", syntax);
             
             var copyright = GetAssemblyAttribute(asm, typeof (AssemblyCopyrightAttribute));
@@ -37,10 +52,18 @@ namespace CliParse
             var footer = GetAssemblyMetadataAttribute(asm, "footer");
             template = template.Replace("{footer}", footer);
 
-            return FormatTextForScreen(template.Trim(), _MaxLineLength);
+            return FormatTextForScreen(template.Trim(), maxLineLength);
         }
 
-        public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, string argumentPrefix)
+        /// <summary>
+        /// Returns help content derived from the provided parsable object.
+        /// </summary>
+        /// <param name="parsable"></param>
+        /// <param name="template"></param>
+        /// <param name="argumentTemplate"></param>
+        /// <param name="maxLineLength">The maximum number of characters in a line before it is wrapped</param>
+        /// <returns></returns>
+        public static string GetHelpInfo(Parsable parsable, string template, string argumentTemplate, int maxLineLength = 80)
         {
             if (parsable == null) throw new ArgumentNullException("parsable");
             if (string.IsNullOrEmpty(template)) return "";
@@ -55,20 +78,31 @@ namespace CliParse
             template = template.Replace("{copyright}", string.IsNullOrEmpty(parsableClass.Copyright) ? "" : parsableClass.Copyright);
             template = template.Replace("{version}", parsableClass.Version);
 
-            var syntax = GetSyntaxInfo(parsable, argumentTemplate, argumentPrefix);
+            var syntax = GetSyntaxInfo(parsable, argumentTemplate, parsableClass.AllowedPrefixes);
             template = template.Replace("{syntax}", syntax);
 
             template = template.Replace("{example}", parsableClass.ExampleText);
             template = template.Replace("{footer}", parsableClass.FooterText);
 
-            return FormatTextForScreen(template.Trim(), _MaxLineLength);
+            return FormatTextForScreen(template.Trim(), maxLineLength);
         }
 
-        private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, string prefix)
+        private static string GetSyntaxInfo(Parsable parsable, string argumentTemplate, ICollection<char> prefixes)
         {
             var arguments = GetListArgumentAttributes(parsable);
 
             var sb = new StringBuilder();
+
+            var prefix = "-"; // default
+            if (prefixes.Count > 1)
+            {
+                prefix = prefixes.FirstOrDefault().ToString();
+                var allowedPrefixes = "";
+                prefixes.ToList().ForEach(x => allowedPrefixes += "'" + x + "',");
+                allowedPrefixes = allowedPrefixes.Substring(0, allowedPrefixes.Length - 1);
+                sb.AppendLine("The following argument prefix characters can be used: "+allowedPrefixes);
+            }
+
             foreach (var argument in arguments)
             {
                 sb.AppendLine(argument.GetSyntax(argumentTemplate, prefix));

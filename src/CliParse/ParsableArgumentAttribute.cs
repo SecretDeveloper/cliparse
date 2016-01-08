@@ -2,6 +2,9 @@ using System;
 
 namespace CliParse
 {
+    /// <summary>
+    /// Properties that should be populated during the CliParse() process should have this attribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property|AttributeTargets.Field, AllowMultiple = false, Inherited=false)]
     public sealed class ParsableArgumentAttribute : Attribute
     {
@@ -24,7 +27,7 @@ namespace CliParse
         /// <summary>
         /// The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// The single character name of the argument, supplied in the commandline using a single prefix character e.g. -p value.
@@ -51,18 +54,30 @@ namespace CliParse
         /// </summary>
         public string Example { get; set; }
         
-        public const string DefaultPrefix = "-";
+        /// <summary>
+        /// The default template used when building help screens.
+        /// </summary>
         public const string DefaultTemplate = @"    {name}, {shortname}    
         {description}
         {required}, Default:'{defaultvalue}'
         {example}";
 
+        /// <summary>
+        /// ParsableArgumentAttribute
+        /// </summary>
+        /// <param name="name"></param>
        public ParsableArgumentAttribute(string name)
        {
            ImpliedPosition = 0; 
            Name = name;
         }
 
+        /// <summary>
+        /// Returns a string containing syntax help information for this property.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
         public string GetSyntax(string template, string prefix)
         {
             if (string.IsNullOrEmpty(template)) return "";

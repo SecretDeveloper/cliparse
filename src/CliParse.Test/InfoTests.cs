@@ -25,6 +25,7 @@ Description:
     This assembly contains the unit tests for the cliparse library.    
 
 Syntax:
+The following argument prefix characters can be used: '-','/'
     --x,     
         
         [Optional], Default:''
@@ -85,6 +86,7 @@ Description:
     This is a description.    
 
 Syntax:
+The following argument prefix characters can be used: '-','/'
     --x,     
         
         [Optional], Default:''
@@ -145,6 +147,7 @@ Description:
     Test Data Generation tool    
 
 Syntax:
+The following argument prefix characters can be used: '-','/'
     --template, -t    
         The template containing 1 or more patterns to use when producing data.
         [Optional], Default:''
@@ -371,20 +374,9 @@ iueyauuoa";
         {
             var simple = new SimpleCli();
             var actual = simple.GetHelpInfo("{version}-{title}-\r\n{syntax}\r\n{description}\r\n{footer}",
-                "-{shortname}, --{name} - {description} {required}, {defaultvalue}, {example}", "/");
+                "-{shortname}, --{name} - {description} {required}, {defaultvalue}, {example}");
 
             Assert.AreNotEqual(simple.GetHelpInfo() , actual);
-            Console.Write(actual);
-        }
-
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_create_help_screen_from_supplied_templates2()
-        {
-            var simple = new SimpleCli();
-            var actual = simple.GetHelpInfo(argumentPrefix:"/");
-
-            Assert.AreNotEqual(simple.GetHelpInfo(), actual);
             Console.Write(actual);
         }
     }

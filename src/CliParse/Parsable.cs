@@ -4,6 +4,9 @@ namespace CliParse
 {
     public abstract class Parsable
     {
+        /// <summary>
+        /// The default template to use when creating help screens.
+        /// </summary>
         public const string DefaultTemplate = @"{title} {version}
 {copyright}
 Description:

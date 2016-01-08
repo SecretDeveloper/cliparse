@@ -37,27 +37,36 @@ namespace CliParse
         /// <summary>
         /// A list of the parameter values which will set ShowHelp to true if they are provided. Default is "help" and '?'.
         /// </summary>
-        public IEnumerable<string> ShowHelpParameters { get; set; }
+        public IEnumerable<string> ShowHelpParameters { get; private set; }
         /// <summary>
         /// Determines whether ShowHelp is set to true when no arguments are provided.
         /// Default is true.
         /// </summary>
         public bool ShowHelpWhenNoArgumentsProvided { get; set; }
 
+        /// <summary>
+        /// A parsable class attribute.
+        /// </summary>
+        /// <param name="title">The title used for help content</param>
         public ParsableClassAttribute(string title)
         {
-            reset();
+            Reset();
             Title = title;
         }
 
+        /// <summary>
+        /// A parsable class attribute.
+        /// </summary>
+        /// <param name="title">The title used for help content</param>
+        /// <param name="description">The description used for help content</param>
         public ParsableClassAttribute(string title, string description = "")
         {
-            reset();
+            Reset();
             Title = title;
             Description = description;
         }
 
-        private void reset()
+        private void Reset()
         {
             Description = "";
             AllowedPrefixes = new[] {'-', '/'};
