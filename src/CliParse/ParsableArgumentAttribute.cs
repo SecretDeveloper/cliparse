@@ -15,6 +15,10 @@ namespace CliParse
         /// An argument named 'param1' with ImpliedPosition 1 can be provided as
         /// "--param1 value" or "value"
         /// </example>
+        /// <example>
+        /// An argument named 'param1' with ImpliedPosition -1 can be provided as
+        /// "otherParam 'otherParamValue' --param1 value" or "otherParam 'otherParamValue' value"
+        /// </example>
         public int ImpliedPosition { get; set; }
         
         /// <summary>
