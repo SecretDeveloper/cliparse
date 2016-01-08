@@ -110,18 +110,55 @@ public class Program
 
         Console.WriteLine(exampleParsable.StringArgument);
     }
+
 ```
 
-####Step 4
+###Step 4
 Get on with building the rest of your application.
 
-###Generated help text. 
+##Attributes
+
+### Class level
+A ParsableClass attribute which is applied to your class object can be provided with the following properties:
+1. Title - The Title that will be displayed on help screens.  
+2. Description - A description that will be displayed on help screens.  
+3. Version - The applications current version.  
+4. Copyright - The applications copyright statement.  
+5. ExampleText - Example content that will be included on help screens.  
+6. FooterText - Footer content that will be included on help screens.  
+7. AllowedPrefixes - The allowed parameter prefix characters. Default is '-' and '/'.  
+
+### Property level
+A ParsableArgument attribute which is applied to properties on your class object can be provided with the following properties:
+1. ImpliedPosition - Argument values supplied without a name can be determined by their position.
+An ImpliedPosition of 1 means the value can be supplied as the first parameter.
+An ImpliedPosition of -1 means the value can be supplied as the last parameter.
+The default value is 0 which means ImpliedPosition is not used.
+An argument named 'param1' with ImpliedPosition 0 can be provided as
+"--param1 value" or "value".  
+2. Name - The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.  
+3. ShortName - The single character name of the argument, supplied in the commandline using a single prefix character e.g. -p value.  
+4. DefaultValue - The default value to use when the argument is not supplied. Cannot be used when 'Required' is true.  
+5. Required - Represents whether the argument must be supplied and returns a failure parse result if it was not found.  
+6. Description - The description of what the argument represents.  This is used when building the argument help content.  
+7. Example - The example instructions of how an argument can be supplied.  This is used when building the argument help content.  
+
+In this example 'a' is the properties shortname and can be provided in an argument as `-a value`.  Multiple shortname values can be provided in a single command e.g. `-am "message"`.
+The longer name of the argument is age and can be used provided as `--age value`.
+A default value can be supplied but only if the argument is not required.
+Description and Example are used to build the help screens.
+Required specifies that a value must be provided.
+
+#### Pre and Post
+By overriding the PreParse() and PostParse() methods you can execute custom code which will be executed before the parse result is returned.
+
+##Generated help screens
 CliParse will also produce a configurable help screen listing details for each property.  Calling GetHelpInfo or GetHelpInfoFromAssembly will produce a help screen string.
 
 ####GetHelpInfo()
 Reads the properties from the Parsable inherited class to build the help information:
 ```c#
-[ParsableClass("title", "description",CopyRight="copyright", FooterText = "footer")]    
+[ParsableClass("title", Description="description", CopyRight="copyright", FooterText = "footer")]    
 ```
 
 ####GetHelpInfoFromAssembly(asm)
@@ -133,7 +170,7 @@ Reads the properties from AssemblyInfo metadata of the provided Assembly to buil
 [assembly: AssemblyMetadataAttribute("footer","footer")]
 ```
 
-####Example help screen
+###Example help screen
 The example parsable class used in the earlier example has a ```GetHelpInfo()``` method which will produce the following content:
 ```
 Example CLI Parsable 
@@ -162,59 +199,6 @@ Syntax:
 This is the footer text.
 ```
 
-###Attributes
-A ParsableClass attribute which is applied to your class object can be provided with the following properties:
-1. Title - The Title that will be displayed on help screens.
-2. Description - A description that will be displayed on help screens.
-3. Version - The applications current version.
-4. Copyright - The applications copyright statement.
-5. ExampleText - Example content that will be included on help screens.
-6. FooterText - Footer content that will be included on help screens.
-7. AllowedPrefixes - The allowed parameter prefix characters. Default is '-' and '/'.
-
-A ParsableArgument attribute which is applied to properties on your class object can be provided with the following properties:
-1. ImpliedPosition - Argument values supplied without a name can be determined by their position.
-An ImpliedPosition of 1 means the value can be supplied as the first parameter.
-An ImpliedPosition of -1 means the value can be supplied as the last parameter.
-The default value is 0 which means ImpliedPosition is not used.
-An argument named 'param1' with ImpliedPosition 0 can be provided as
-"--param1 value" or "value"
-2. Name - The longer name of the argument, supplied in the commandline using double prefix characters e.g. --param1 value.
-3. ShortName - The single character name of the argument, supplied in the commandline using a single prefix character e.g. -p value.
-4. DefaultValue - The default value to use when the argument is not supplied. Cannot be used when 'Required' is true.
-5. Required - Represents whether the argument must be supplied and returns a failure parse result if it was not found.
-6. Description - The description of what the argument represents.  This is used when building the argument help content.
-7. Example - The example instructions of how an argument can be supplied.  This is used when building the argument help content.
-
-
-In this example 'a' is the properties shortname and can be provided in an argument as `-a value`.  Multiple shortname values can be provided in a single command e.g. `-am "message"`.
-The longer name of the argument is age and can be used provided as `--age value`.
-A default value can be supplied but only if the argument is not required.
-Description and Example are used to build the help screens.
-Required specifies that a value must be provided.
-
-#### Pre and Post
-By overriding the PreParse() and PostParse() methods you can execute custom code which will be executed before the parse result is returned.
-```c#
-/// <summary>
-        /// Executes before any parsing is performed.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="result"></param>
-        public virtual void PreParse(IEnumerable<string> args, CliParseResult result)
-        {
-        }
-
-        /// <summary>
-        /// Executes after parsing has been performed.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="result"></param>
-        public virtual void PostParse(IEnumerable<string> args, CliParseResult result)
-        {
-        }
-```
-
 ###Customised Help Screens
 You can customize the help screens generated by ```GetHelpInfo()``` by supplying different values for ```template```, ```argumentTemplate``` and ```argumentPrefix```.
 
@@ -224,3 +208,4 @@ var exampleParsable = new ExampleParsable();
                 "-{shortname}, --{name} - {description} {required}, {defaultvalue}, {example}", "/");
 ```
 
+## Take a look at the unit tests for further examples including a simple GIT commandline parsable class.
