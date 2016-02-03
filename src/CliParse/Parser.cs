@@ -43,6 +43,7 @@ namespace CliParse
 
             var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
             var allowedPrefixes = GetParsableClassAllowedPrefixs(parsableClass);
+            var ignoreUnknowns = parsableClass != null && parsableClass.IgnoreUnknowns;
 
             var tokens = Tokenizer.Tokenize(args, allowedPrefixes).ToList();
             result.ShowHelp = tokens.Any(token=>IsHelpToken(token, parsable));
@@ -99,7 +100,7 @@ namespace CliParse
             }
 
             // unknown/unused aruments
-            if (!result.ShowHelp)
+            if (!result.ShowHelp && !ignoreUnknowns)
             {
                 tokens.Where(x => !x.Taken)
                     .ToList()

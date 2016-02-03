@@ -203,6 +203,19 @@ namespace CliParse.Tests
 
         [TestCategory("Parsing")]
         [TestMethod]
+        public void required_and_ignore_unknown_property_checking()
+        {
+            var args = NativeMethods.CommandLineToArgs("-d c:\\Temp");
+            var simple = new IgnoreUnkownArgs();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful);
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
         public void sets_showhelp_to_false_when_no_arguments_supplied_and_showhelpwhennoargumentsprovided_is_false()
         {
             var args = NativeMethods.CommandLineToArgs("");

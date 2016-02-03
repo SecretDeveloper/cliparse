@@ -45,6 +45,12 @@ namespace CliParse
         public bool ShowHelpWhenNoArgumentsProvided { get; set; }
 
         /// <summary>
+        /// Ingore unknown parameters
+        /// </summary>
+        /// <remarks>Default is false</remarks>
+        public bool IgnoreUnknowns { get; set; }
+
+        /// <summary>
         /// A parsable class attribute.
         /// </summary>
         /// <param name="title">The title used for help content</param>
