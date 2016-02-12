@@ -88,6 +88,20 @@ namespace CliParse.Tests
 
         [TestCategory("Parsing")]
         [TestMethod]
+        public void can_set_implied_defaulted_values()
+        {
+            var args = NativeMethods.CommandLineToArgs("100");
+            var simple = new CommandLineArgs();
+            var result = simple.CliParse(args);
+
+            Assert.AreEqual(true, result.Successful,"Successful");
+            Assert.AreEqual(0, result.CliParseMessages.ToList().Count);
+            Assert.AreEqual(false, result.ShowHelp);
+            Assert.AreEqual(100, simple.ImpliedDefault);
+        }
+
+        [TestCategory("Parsing")]
+        [TestMethod]
         public void can_parse_int_arguments_by_short_name()
         {
             var args = NativeMethods.CommandLineToArgs("/f 1");

@@ -189,6 +189,10 @@ The following argument prefix characters can be used: '-','/'
         Outputs a list of the named patterns from the 
         default.tdg-patterns file.
         [Optional], Default:'False'
+        
+    --impliedDefault,     
+        Implied first position. Default is 1
+        [Optional], Default:'1'
 ";
 
             var actual = simple.GetUsage();

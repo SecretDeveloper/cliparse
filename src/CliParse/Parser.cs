@@ -52,24 +52,23 @@ namespace CliParse
                 if (parsableClass == null || parsableClass.ShowHelpWhenNoArgumentsProvided) result.ShowHelp = true;
             }
 
-            var discoveredArguments = new List<ParsableArgumentAttribute>();
-
             var parsableType = parsable.GetType();
             var properties = parsableType.GetProperties();
             List<PropertyInfo> propertiesToFindByPosition = new List<PropertyInfo>();
             List<PropertyInfo> requiredProperties = new List<PropertyInfo>();
-            
+            List<PropertyInfo> unsetProperties = new List<PropertyInfo>();
+
             // find by names
             foreach (var prop in properties)
             {
                 foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
-                    discoveredArguments.Add(argument);
                     var token = GetTokenForArgumentByName(tokens, argument);
                     var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
 
                     if (!propertySet && token == null)
                     {
+                        unsetProperties.Add(prop);
                         propertiesToFindByPosition.Add(prop);
                     }
                 }
@@ -82,12 +81,28 @@ namespace CliParse
                 {
                     var token = GetTokenForArgumentByPosition(tokens, argument);
                     var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
-                    
+
                     if (!propertySet && argument.Required)
+                    {
+                        unsetProperties.Remove(prop);
                         requiredProperties.Add(prop);
 
+                    }
+
                     if (propertySet)
+                    {
+                        unsetProperties.Remove(prop);
                         requiredProperties.Remove(prop);
+                    }
+
+                }
+            }
+
+            foreach (var unsetProperty in unsetProperties)
+            {
+                foreach (var argument in unsetProperty.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
+                {
+                    SetPropertyValue(parsable, null, null, argument, unsetProperty, true);
                 }
             }
 
@@ -98,6 +113,8 @@ namespace CliParse
                     result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was not supplied.", argument.Name));
                 }
             }
+
+            
 
             // unknown/unused aruments
             if (!result.ShowHelp && !ignoreUnknowns)
@@ -143,11 +160,11 @@ namespace CliParse
             return token.Type == TokenType.Field && defaultHelpArgs.Contains(token.Value.ToString());
         }
 
-        private static bool SetPropertyValue(Parsable parsable, Token token, IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument, PropertyInfo prop)
+        private static bool SetPropertyValue(Parsable parsable, Token token, IEnumerable<Token> tokens, ParsableArgumentAttribute parsableArgument, PropertyInfo prop, bool applyDefault = false)
         {
             if (token == null)
             {
-                if (parsableArgument.DefaultValue != null)
+                if (parsableArgument.DefaultValue != null && applyDefault)
                 {
                     prop.SetValue(parsable, parsableArgument.DefaultValue);
                     return true;
