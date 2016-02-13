@@ -39,7 +39,7 @@ namespace CliParse.Tests.ParsableObjects
         [ParsableArgument("listnamedpatterns", ShortName = 'l', DefaultValue = false, Description = "Outputs a list of the named patterns from the default.tdg-patterns file.", Required = false)]
         public bool ListNamedPatterns { get; set; }
 
-        [ParsableArgument("impliedDefault", DefaultValue = 1, Description = "Implied first position. Default is 1",ImpliedPosition = 1, Required = false)]
+        [ParsableArgument("impliedDefault", DefaultValue = 1, Description = "Implied first position. Default is 1", ImpliedPosition = 1, Required = false)]
         public int ImpliedDefault { get; set; }
 
         public string GetUsage()
