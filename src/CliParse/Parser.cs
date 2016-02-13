@@ -43,6 +43,7 @@ namespace CliParse
 
             var parsableClass = Helper.GetObjectAttribute(parsable, typeof(ParsableClassAttribute)) as ParsableClassAttribute;
             var allowedPrefixes = GetParsableClassAllowedPrefixs(parsableClass);
+            var ignoreUnknowns = parsableClass != null && parsableClass.IgnoreUnknowns;
 
             var tokens = Tokenizer.Tokenize(args, allowedPrefixes).ToList();
             result.ShowHelp = tokens.Any(token=>IsHelpToken(token, parsable));
@@ -51,55 +52,49 @@ namespace CliParse
                 if (parsableClass == null || parsableClass.ShowHelpWhenNoArgumentsProvided) result.ShowHelp = true;
             }
 
-            var discoveredArguments = new List<ParsableArgumentAttribute>();
-
             var parsableType = parsable.GetType();
-            var properties = parsableType.GetProperties();
-            List<PropertyInfo> propertiesToFindByPosition = new List<PropertyInfo>();
-            List<PropertyInfo> requiredProperties = new List<PropertyInfo>();
-            
+
+            List<PropertyInfo> unsetProperties = parsableType.GetProperties().ToList();
+            List<PropertyInfo> tmpSetProperties = new List<PropertyInfo>();
+
             // find by names
-            foreach (var prop in properties)
+            foreach (var prop in unsetProperties)
             {
                 foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
-                    discoveredArguments.Add(argument);
+                    // find by name
                     var token = GetTokenForArgumentByName(tokens, argument);
-                    var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
+                    var propertySet = false;
+                    if(token != null) 
+                        propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
 
-                    if (!propertySet && token == null)
+                    if (!propertySet)
                     {
-                        propertiesToFindByPosition.Add(prop);
+                        // find by position
+                        token = GetTokenForArgumentByPosition(tokens, argument);
+                        propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
+                    }
+                    // flag property as set and remove later.
+                    if (propertySet)
+                    {
+                        tmpSetProperties.Add(prop);
                     }
                 }
             }
+            tmpSetProperties.ForEach(x => unsetProperties.Remove(x));
 
-            // find by positions
-            foreach (var prop in propertiesToFindByPosition)
+            foreach (var unsetProperty in unsetProperties)
             {
-                foreach (var argument in prop.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
+                foreach (var argument in unsetProperty.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
                 {
-                    var token = GetTokenForArgumentByPosition(tokens, argument);
-                    var propertySet = SetPropertyValue(parsable, token, tokens, argument, prop);
-                    
-                    if (!propertySet && argument.Required)
-                        requiredProperties.Add(prop);
-
-                    if (propertySet)
-                        requiredProperties.Remove(prop);
+                    if(argument.Required)
+                        result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was not supplied.", argument.Name));
                 }
             }
 
-            foreach (var requiredProperty in requiredProperties)
-            {
-                foreach (var argument in requiredProperty.GetCustomAttributes(true).OfType<ParsableArgumentAttribute>())
-                {
-                    result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,"Required argument '{0}' was not supplied.", argument.Name));
-                }
-            }
-
+            
             // unknown/unused aruments
-            if (!result.ShowHelp)
+            if (!result.ShowHelp && !ignoreUnknowns)
             {
                 tokens.Where(x => !x.Taken)
                     .ToList()
@@ -108,22 +103,6 @@ namespace CliParse
                             result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,
                                 "Unknown argument '{0}' was supplied.", x.Value.ToString())));
             }
-
-            //if (result.ShowHelp == false)
-            //{
-            //    foreach (var token in tokens.Where(x => x.Type == TokenType.Field))
-            //    {
-            //        foreach (var discoveredArg in discoveredArguments)
-            //        {
-            //            if (discoveredArg.Name.Equals(token.Value.ToString(), StringComparison.InvariantCultureIgnoreCase) 
-            //                || discoveredArg.ShortName.ToString().Equals(token.Value.ToString(), StringComparison.InvariantCulture))
-            //            {
-            //                result.AddErrorMessage(string.Format(CultureInfo.CurrentCulture,
-            //                    "Unknown argument '{0}' was supplied.", token.Value));
-            //            }
-            //        }
-            //    }
-            //}
 
             return result;
         }

@@ -127,6 +127,7 @@ A `ParsableClass` attribute which is applied to your class object can be provide
 5. **ExampleText** - Example content that will be included on help screens.  
 6. **FooterText** - Footer content that will be included on help screens.  
 7. **AllowedPrefixes** - The allowed parameter prefix characters. Default is '-' and '/'.  
+8. **IgnoreUnknowns** - Ignore any unknown arguments. Default is `false`.
 
 ### Property level
 A `ParsableArgument` attribute which is applied to properties on your class object can be provided with the following properties:  
