@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using CliParse;
+
 
 namespace CliParse.Tests.GitExample
 {

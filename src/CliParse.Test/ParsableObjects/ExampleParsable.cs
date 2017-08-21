@@ -1,4 +1,6 @@
-﻿namespace CliParse.Tests.ParsableObjects
+﻿using CliParse;
+
+namespace CliParse.Tests.ParsableObjects
 {
     [ParsableClass("Example CLI Parsable", "This is a description.", FooterText = "This is the footer text.")]
     public class ExampleParsable:Parsable

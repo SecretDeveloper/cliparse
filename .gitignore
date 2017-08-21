@@ -49,3 +49,5 @@ packages/
 _Resharper*/
 node_modules/
 .nuget
+.vscode
+.vs

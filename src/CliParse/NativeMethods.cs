@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace CliParse
 {
     [ExcludeFromCodeCoverage]
-    internal static class NativeMethods
+    public static class NativeMethods
     {
         [DllImport("shell32.dll", SetLastError = true)]
         static extern IntPtr CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);

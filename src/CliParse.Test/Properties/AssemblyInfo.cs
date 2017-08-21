@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Library")]
 [assembly: AssemblyCopyright("Gary Kenneally (@SecretDeveloper) [2015]")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCompany("@SecretDeveloper")]
+[assembly: AssemblyCompany(company: "@SecretDeveloper")]
 [assembly: AssemblyCulture("")]
 
 [assembly: AssemblyMetadata("footer", "Footer Content")]
@@ -35,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.15.0.0")]
 [assembly: AssemblyFileVersion("0.13.0.0")]
+

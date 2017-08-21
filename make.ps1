@@ -160,7 +160,7 @@ function publish{
     # DEPLOYING
     write-host "Publishing Nuget package" -foregroundcolor:blue
     $outputName = ".\releases\$projectName.$fullBuildVersion.nupkg"
-    nuget push $outputName
+    nuget push $outputName -source nuget.org
 }
 
 $basePath = Get-Location
@@ -177,7 +177,6 @@ if($buildType -eq "publish"){
     xutest    
     pack 
     publish  
-
     exit
 }
 if($buildType -eq "clean"){
@@ -185,10 +184,10 @@ if($buildType -eq "clean"){
     clean  
     exit
 }
-else {
-    clean
-    build
-    xutest 
-    pack   
-}
+
+clean
+build
+xutest 
+pack   
+
 Write-Host Finished -foregroundcolor:blue

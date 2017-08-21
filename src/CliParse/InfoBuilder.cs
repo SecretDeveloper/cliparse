@@ -183,7 +183,7 @@ namespace CliParse
             return sb.ToString();
         }
 
-        internal static string BreakStringToLength(string line, int maximumLineLength)
+        public static string BreakStringToLength(string line, int maximumLineLength)
         {
             if (string.IsNullOrEmpty(line)) return "";
             if (maximumLineLength <= 1) throw new ArgumentOutOfRangeException("maximumLineLength");
