@@ -92,8 +92,8 @@ namespace CliParse.Tests.ParsableObjects
             set;
         }
 
-        public bool PreParseExecuted = false;
-        public bool PostParseExecuted = false;
+        public bool PreParseExecuted;
+        public bool PostParseExecuted;
 
         public override void PreParse(IEnumerable<string> args, CliParseResult result)
         {

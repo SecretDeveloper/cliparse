@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace CliParse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public sealed class ParsableClassAttribute : Attribute
     {

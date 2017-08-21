@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace CliParse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Parser
     {
         /// <summary>
@@ -143,7 +146,7 @@ namespace CliParse
                         tokens.FirstOrDefault(x => !x.Taken && x.Index == token.Index + 1 && x.Type == TokenType.Value);
 
                     var optionValue = true;
-                    if (tokenValue != null && !Boolean.TryParse(tokenValue.Value.ToString(), out optionValue))
+                    if (tokenValue != null && !bool.TryParse(tokenValue.Value.ToString(), out optionValue))
                     {
                         // tokenValue did not contain a valid bool so do not use its value, set it back to null so it will not be flagged as Taken.
                         tokenValue = null;

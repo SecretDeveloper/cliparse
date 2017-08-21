@@ -2,6 +2,7 @@ param(
     $buildType = "Release"
 )
 
+$xunitConsole = ".\tools\xunit\net452\xunit.console.exe"
 
 function clean{
     # CLEAN
@@ -83,59 +84,10 @@ function build{
     } 
 }
 
-function test{
-    # TESTING
-    write-host "Testing"  -foregroundcolor:blue
-
-    $trxPath = "$basePath\TestOutput\AllTest.trx"
-    $resultFile="/resultsfile:$trxPath"
-
-    $testDLLs = get-childitem -path "$basePath\TestOutput\*.*" -include "*.Tests.dll"
-    #write-host "get-childitem -path $basePath\TestOutput\*.* -include *.Tests.dll"
-    
-    $arguments = " /testcontainer:" + $testDLLs + " /TestSettings:$basePath\src\LocalTestRun.testsettings"
-    #write-host "mstest $resultFile $arguments"
-    Invoke-Expression "mstest $resultFile $arguments > $logPath\LogTest.log"
-
-    if(!$LastExitCode -eq 0){
-        Write-host "TESTING FAILED0!" -foregroundcolor:red
-        $lastResult = $false                
-    }
-
-    $content = (Get-Content -Path "$logPath\LogTest.log")
-
-    $failedContent = ($content -match "Failed")
-    $failedCount = $failedContent.Count
-    if($failedCount -gt 0)
-    {    
-        Write-host "TESTING FAILED1!" -foregroundcolor:red
-        $lastResult = $false
-    }
-    Foreach ($line in $failedContent) 
-    {
-        write-host $line -foregroundcolor:red
-    }
-
-    $failedContent = ($content -match "Not Runnable")
-    $failedCount = $failedContent.Count
-    if($failedCount -gt 0)
-    {    
-        Write-host "TESTING FAILED2!" -foregroundcolor:red
-        $lastResult = $false
-    }
-    Foreach ($line in $failedContent) 
-    {
-        write-host $line -foregroundcolor:red
-    }
-
-    if($lastResult -eq $False){    
-        exit
-    }
-}
 
 
-#vstest.console
-function vstest{
+
+function xutest{
     # TESTING
     write-host "Testing"  -foregroundcolor:blue
 
@@ -146,8 +98,8 @@ function vstest{
     #write-host "get-childitem -path $basePath\TestOutput\*.* -include *.Tests.dll"
     
     $arguments = "$testDLLs"
-    write-host "vstest.console.exe $arguments"
-    Invoke-Expression "vstest.console.exe $arguments > $logPath\LogTest.log"
+    #write-host "$xunitConsole $arguments"
+    Invoke-Expression "$xunitConsole $arguments > $logPath\LogTest.log"
 
     if(!$LastExitCode -eq 0){
         Write-host "TESTING FAILED0!" -foregroundcolor:red
@@ -185,6 +137,7 @@ function vstest{
     }
 }
 
+
 function pack{
     # Packing
     write-host "Packing" -foregroundcolor:blue
@@ -221,7 +174,7 @@ if($buildType -eq "publish"){
 
     clean
     build
-    vstest    
+    xutest    
     pack 
     publish  
 
@@ -235,7 +188,7 @@ if($buildType -eq "clean"){
 else {
     clean
     build
-    vstest 
+    xutest 
     pack   
 }
 Write-Host Finished -foregroundcolor:blue

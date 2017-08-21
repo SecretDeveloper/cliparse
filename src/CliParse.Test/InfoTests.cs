@@ -3,17 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using CliParse.Tests.ParsableObjects;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CliParse.Tests
 {
-    [TestClass]
     [ExcludeFromCodeCoverage]
     public class InfoTests
     {
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_generate_info_text_from_assembly_attributes()
+        [Fact]
+        public void Can_generate_info_text_from_assembly_attributes()
         {
             var simple = new SimpleCli();
             var asm = Assembly.GetExecutingAssembly();
@@ -71,12 +69,11 @@ Footer Content
 ";
 
             var actual = simple.GetHelpInfoFromAssembly(asm);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_generate_info_text_from_parsable_attributes()
+        [Fact]
+        public void Can_generate_info_text_from_parsable_attributes()
         {
             var simple = new SimpleCli();
 
@@ -132,12 +129,11 @@ This is the footer text.
 ";
 
             var actual = simple.GetHelpInfo();
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_generate_info_text_from_parsable_attributes_advanced()
+        [Fact]
+        public void Can_generate_info_text_from_parsable_attributes_advanced()
         {
             var simple = new CommandLineArgs();
 
@@ -196,32 +192,31 @@ The following argument prefix characters can be used: '-','/'
 ";
 
             var actual = simple.GetUsage();
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_break_text_unspaced_correctly()
+        [Fact]
+        public void Can_break_text_unspaced_correctly()
         {
             var lineLength = 10;
 
             var input = @"aaaaaaaaa";
             var expected = @"aaaaaaaaa";
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
 
             input = @"aaaaaaaaaaaaaaaaaa";
             expected = @"aaaaaaaaaa
 aaaaaaaa";
             actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
 
             input = @"aaaaaaaaaaaaaaaaaaaaa";
             expected = @"aaaaaaaaaa
 aaaaaaaaaa
 a";
             actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
 
 
             input = @"  aaaaaaaaaaaaaaaaaaaaa";
@@ -229,17 +224,16 @@ a";
   aaaaaaaa
   aaaaa";
             actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
             
             input = "        required:N default:''\r";
             expected = "        required:N default:''\r";
             actual = InfoBuilder.BreakStringToLength(input, 80);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_break_text_spaced_correctly()
+        [Fact]
+        public void Can_break_text_spaced_correctly()
         {
             var lineLength = 80;
 
@@ -259,22 +253,14 @@ vuaugiyhuo ueifeaki ouuuu pqdb aiiob oyqeazuja eeuqsaohen teboaoahranaif
 cieikaiufa ql aeuaxcoogzyee pmcioohiiko emari iiz bfaaaaujdokxei ejeaouiwo bhiu 
 xbnouoeiuwaiad aio geiqpouicewysi";
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
+            
 
-            Console.WriteLine("Expected");
-            Console.WriteLine(expected);
-            Console.WriteLine("Actual");
-            Console.WriteLine(actual);
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
 
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_break_string_long_after_space()
+        [Fact]
+        public void Can_break_string_long_after_space()
         {
             var lineLength = 80;
 
@@ -289,13 +275,11 @@ aqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauio
 wiueyauuoa";
 
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
-            Console.WriteLine(actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_handle_unspaced_text()
+        [Fact]
+        public void Can_handle_unspaced_text()
         {
             var lineLength = 80;
 
@@ -310,35 +294,22 @@ qeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiow
 iueyauuoa";
 
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
-            Console.WriteLine(actual);
+            Assert.Equal(expected, actual);
         }
         
-        [TestCategory("Negative")]
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void can_error_text_breaking()
+        [Fact]
+        public void Can_error_text_breaking()
         {
             var lineLength = -1;
 
             // long random paragraph generated using 'tdg -p "((\l|\v){2,15} ){50}"'
             var input = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowezueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruahuudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeeviioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdiaqeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiowiueyauuoa";
-
-            var expected = @"aoakhooowauaianoinbceoehlxvuoeudjfueiuetbeeuvezuxbqhihhpouodliruvaxyaagshaxuaowe
-zueraatgfsiyufewhuamwcalwioyikaqlavtiwquaetuoboioibeacuiaaupqaukuiuujiunoiohruah
-uudiouzqeaaahueeaeiaateiipaazaaltfhobqaguoaajiuiuilxyieeiojxorezowafbraibuojeevi
-ioqsaafeneeiuijamtibiibamjygiiudhwusaoiutaooenbxaiirbduaeauhuhtaueivcxkdumrlkdia
-qeuujjoziikipoilheiequlupoyeuuxoeubzyaaeiaapddauawuuabuiyeuuuguruiiuduyxeepauiow
-iueyauuoa";
-
-            var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-            Assert.AreEqual(expected, actual);
-            Console.WriteLine(actual);
+            
+            Assert.Throws<ArgumentOutOfRangeException>(()=>InfoBuilder.BreakStringToLength(input, lineLength));
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_break_text_spaced_and_padded_correctly()
+        [Fact]
+        public void Can_break_text_spaced_and_padded_correctly()
         {
             var lineLength = 80;
 
@@ -359,29 +330,19 @@ iueyauuoa";
     aeuaxcoogzyee pmcioohiiko emari iiz bfaaaaujdokxei ejeaouiwo bhiu 
     xbnouoeiuwaiad aio geiqpouicewysi";
             var actual = InfoBuilder.BreakStringToLength(input, lineLength);
-
-            Console.WriteLine("Expected");
-            Console.WriteLine("'"+expected+"'");
-            Console.WriteLine("Actual");
-            Console.WriteLine("'"+actual+"'");
-            Console.WriteLine();
-            Console.WriteLine("CurrentUICulture:" + CultureInfo.CurrentUICulture.Name);
-            Console.WriteLine("CurrentCulture:" + CultureInfo.CurrentCulture.Name);
-
-            Assert.IsTrue(string.Equals(expected, actual, StringComparison.InvariantCulture));
+            
+            Assert.True(string.Equals(expected, actual, StringComparison.InvariantCulture));
 
         }
 
-        [TestCategory("Information")]
-        [TestMethod]
-        public void can_create_help_screen_from_supplied_templates()
+        [Fact]
+        public void Can_create_help_screen_from_supplied_templates()
         {
             var simple = new SimpleCli();
             var actual = simple.GetHelpInfo("{version}-{title}-\r\n{syntax}\r\n{description}\r\n{footer}",
                 "-{shortname}, --{name} - {description} {required}, {defaultvalue}, {example}");
 
-            Assert.AreNotEqual(simple.GetHelpInfo() , actual);
-            Console.Write(actual);
+            Assert.NotEqual(simple.GetHelpInfo() , actual);
         }
     }
 }

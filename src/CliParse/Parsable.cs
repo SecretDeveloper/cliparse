@@ -2,6 +2,9 @@
 
 namespace CliParse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Parsable
     {
         /// <summary>

@@ -2,6 +2,9 @@ using System.Reflection;
 
 namespace CliParse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ParsableExtensions
     {
         /// <summary>
