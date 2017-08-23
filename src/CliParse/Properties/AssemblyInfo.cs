@@ -38,7 +38,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("d516f260-e907-4ff4-8b9b-cc5fa3827b40")]
 
 // The following Assembly Version items are managed by the build process.
-//[assembly: AssemblyVersion("0.0.0.0")]
-//[assembly: AssemblyFileVersion("0.0.0.0")]
 [assembly: AssemblyVersion("0.5.0")]
 [assembly: AssemblyFileVersion("0.5.0")]

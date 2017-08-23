@@ -3,16 +3,21 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net45;net451;net452;net46;net461;net462;</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\TestOutput\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup > <!-- Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'" -->
+    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.3.0-beta4-build3742" />
-    
+    <PackageReference Include="xunit" Version="2.3.0-beta4-build3742" />    
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CliParse\CliParse.csproj" />
   </ItemGroup>
+
+
 
 </Project>

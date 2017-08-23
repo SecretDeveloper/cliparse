@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -13,6 +14,7 @@ namespace CliParse.Tests
         [Fact]
         public void Can_generate_info_text_from_assembly_attributes()
         {
+            Debugger.Launch();
             var simple = new SimpleCli();
             var asm = Assembly.GetExecutingAssembly();
 
