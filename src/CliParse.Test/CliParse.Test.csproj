@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0;net46;net461;net462;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;netstandard2.0;net46;net461;</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\TestOutput\</OutputPath>
   </PropertyGroup>
