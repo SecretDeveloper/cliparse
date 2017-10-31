@@ -5,7 +5,7 @@ param(
 function clean{
     # CLEAN
     write-host "Cleaning" -foregroundcolor:blue
-    dotnet clean $basePath\src\
+    dotnet clean 
 }
 
 function preBuild{
@@ -42,7 +42,7 @@ function xutest{
     write-host "Testing"  -foregroundcolor:blue
 
     $testPath = "$basePath\src\$projectName.Test\"
-    Invoke-expression "dotnet xunit $testPath"
+    Invoke-expression "dotnet test $testPath"
 }
 
 
@@ -50,19 +50,11 @@ function pack{
     # Packing
     write-host "Packing" -foregroundcolor:blue
     #dotnet pack .\src\$projectName\$projectName.nuspec -version $fullBuildVersion -o .\releases > $logPath\LogPacking.log     
-    dotnet pack .\src\$projectName\$projectName.nuspec -o .\releases > $logPath\LogPacking.log     
+    dotnet pack .\src\$projectName\$projectName.csproj -o $basePath\releases > $logPath\LogPacking.log     
     if($? -eq $False){
         Write-host "PACK FAILED!"  -foregroundcolor:red
         exit
     }
-}
-
-function createZip{
-    # DEPLOYING
-    write-host "Creating zip" -foregroundcolor:blue
-    $outputName = $projectName+"_V"+$fullBuildVersion+"_BUILD.zip"
-    zip a -tzip .\releases\$outputName -r .\src\BuildOutput\*.* >> $logPath\LogDeploy.log    
-
 }
 
 function publish{
@@ -78,25 +70,27 @@ $buildVersion = Get-Content .\VERSION
 $fullBuildVersion = "$buildVersion.0"
 $projectName = "CliParse"
 
-if($buildType -eq "publish"){
-    $buildType="Release"
 
-    clean
-    build
-    xutest    
-    pack 
-    publish  
-    exit
-}
-if($buildType -eq "clean"){
-    
+if($buildType -eq "clean"){   
     clean  
     exit
+}
+if($buildType -eq "pack"){
+    pack
+    exit
+}
+
+if($buildType -eq "publish"){
+    $buildType="Release"
 }
 
 clean
 build
 xutest 
 pack   
+
+if($buildType -eq "publish"){
+    publish
+}
 
 Write-Host Finished -foregroundcolor:blue
